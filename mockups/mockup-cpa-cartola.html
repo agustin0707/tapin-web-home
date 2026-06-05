@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- iPad embed: si la landing pasa ?frameless, la tarjeta del mockup va sin
+       fondo ni sombra (evita el "marco" al achicar el mockup). El PC nunca
+       recibe la bandera → este bloque queda inerte allí. -->
+  <script>try{if(location.search.indexOf('frameless')>-1){document.documentElement.classList.add('frameless');}}catch(e){}</script>
+  <style>.frameless .mockup{background:transparent!important;box-shadow:none!important;}.frameless .ambient-glow{display:none!important;}</style>
+  <meta charset="UTF-8" />
+  <title>Mockup · Centro de Padres · Cartola Inteligente · Tap In Connect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --c-main:#4A3CAE;
+      --c-mid:#6B5CE7;
+      --c-light:#9B8EF0;
+      --c-xlight:#EEEDFE;
+      --c-text:#2C2B3A;
+      --c-muted:#6B6A7D;
+      --c-deep:#2D2560;
+      --c-border:#BBBAC6;
+      --c-surface:#F2F1F8;
+      --c-highlight:#EBE8FC;
+      --c-success:#22A459;
+      --c-success-soft:#E8F8EE;
+      --c-error:#D94F4F;
+      --c-error-soft:#FFF1F1;
+      /* Timings centralizados · matchea sistema de diseño Comedor */
+      --anim-easing:cubic-bezier(0.65, 0, 0.35, 1);
+      --anim-state-duration:400ms;
+      --anim-reset-duration:300ms;
+      /* Sombras consistentes con sistema Comedor */
+      --shadow-card:0 20px 60px rgba(45,37,96,0.15), 0 4px 16px rgba(45,37,96,0.08);
+      --shadow-dash:0 12px 30px rgba(45,37,96,0.10), 0 2px 8px rgba(45,37,96,0.06);
+      --shadow-elem:0 4px 14px rgba(74,60,174,0.08);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+
+    /* Respeta prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce){
+      *, *::before, *::after{
+        animation-duration:0.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:0.01ms !important;
+      }
+    }
+
+    html,body{
+      width:100%;
+      min-height:100vh;
+      background:#F4F2FC;
+      font-family:'Poppins',sans-serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-rendering:optimizeLegibility;
+      color:var(--c-text);
+      margin:0;
+    }
+
+    /* HiDPI wrapper · 2x render cuando se embebe en iframe a 1800px (home) */
+    .hidpi-wrap{ display:contents; }
+    @media (min-width:1800px){
+      /* En contexto de embed (iframe home a 1800px CSS): body transparente
+         para que el background del card padre se vea en las esquinas
+         redondeadas del mockup. En standalone (<1800px) se mantiene el
+         #F4F2FC del frame original. */
+      html,body{ background:transparent; }
+      .hidpi-wrap{
+        display:block;
+        width:1800px;
+        height:1200px;
+        position:relative;
+        flex-shrink:0;
+      }
+      .hidpi-wrap > .mockup{
+        transform:scale(2);
+        transform-origin:top left;
+        position:absolute;
+        top:0;
+        left:0;
+      }
+    }
+
+    .mockup{
+      width:900px;
+      height:600px;
+      background:linear-gradient(135deg, #F6F4FC 0%, #FFFFFF 55%, #F0EDFB 100%);
+      border-radius:20px;
+      box-shadow:var(--shadow-card);
+      position:relative;
+      overflow:hidden;
+      transition:opacity 300ms ease-in-out;
+      perspective:1800px;
+    }
+    .mockup.is-resetting{ opacity:0; }
+
+    /* Ambient glow sutil */
+    .ambient-glow{
+      position:absolute;
+      width:520px;
+      height:520px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(107,92,231,0.18) 0%, rgba(107,92,231,0) 70%);
+      pointer-events:none;
+      top:0;
+      left:50%;
+      transform:translate(-50%,-30px);
+      z-index:1;
+    }
+
+    /* Wrap del botón primary · contiene pulse + tap ripple
+       Replica el patrón de .pay-btn del mockup Comedor */
+    .btn-primary-wrap{
+      position:relative;
+      display:inline-flex;
+    }
+    .btn-primary{
+      position:relative;
+      overflow:hidden;
+    }
+    .btn-primary.is-hovering{
+      transform:translateY(-1px);
+      box-shadow:0 8px 18px rgba(107,92,231,0.5);
+    }
+    .btn-primary.is-pressed{
+      transform:scale(0.93) translateY(0);
+      box-shadow:0 2px 6px rgba(107,92,231,0.45);
+    }
+    /* Pulse infinito alrededor del botón mientras espera el click */
+    .btn-primary-pulse{
+      position:absolute;inset:0;border-radius:9px;
+      pointer-events:none;
+      box-shadow:0 0 0 0 rgba(107,92,231,0.55);
+      animation:btnPulse 2s ease-out infinite;
+    }
+    @keyframes btnPulse{
+      0%{ box-shadow:0 0 0 0 rgba(107,92,231,0.55); }
+      70%{ box-shadow:0 0 0 14px rgba(107,92,231,0); }
+      100%{ box-shadow:0 0 0 0 rgba(107,92,231,0); }
+    }
+    .btn-primary-wrap.is-hidden-pulse .btn-primary-pulse{ display:none; }
+
+    /* Tap finger · círculo morado que se expande desde el centro */
+    .btn-tap-finger{
+      position:absolute;
+      left:50%;top:50%;
+      width:48px;height:48px;
+      border-radius:50%;
+      background:rgba(107,92,231,0.35);
+      transform:translate(-50%,-50%) scale(0);
+      pointer-events:none;
+      z-index:10;
+      opacity:0;
+    }
+    .btn-tap-finger.is-tapping{
+      animation:tapRipple 600ms ease-out;
+    }
+    @keyframes tapRipple{
+      0%{ transform:translate(-50%,-50%) scale(0); opacity:0.9; background:rgba(107,92,231,0.55); }
+      60%{ opacity:0.5; }
+      100%{ transform:translate(-50%,-50%) scale(2.6); opacity:0; background:rgba(107,92,231,0); }
+    }
+
+    /* Backdrop SOLO con blur · sin oscurecer · contenido detrás difuso */
+    .success-backdrop{
+      position:absolute;
+      inset:0;
+      background:transparent;
+      backdrop-filter:blur(5px);
+      -webkit-backdrop-filter:blur(5px);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 400ms ease-out;
+      z-index:50;
+    }
+    .success-backdrop.is-visible{ opacity:1; }
+
+    /* Popup centrado · estilo modal de confirmación */
+    .success-toast{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:360px;
+      background:#FFFFFF;
+      border-radius:18px;
+      padding:24px 22px 20px;
+      box-shadow:0 30px 60px rgba(45,37,96,0.28),
+                 0 12px 28px rgba(45,37,96,0.14),
+                 0 0 0 1px rgba(34,164,89,0.10);
+      transform:translate(-50%, -50%) scale(0.82);
+      opacity:0;
+      transition:transform 550ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                 opacity 400ms ease-out;
+      z-index:100;
+      text-align:center;
+    }
+    .success-toast.is-visible{
+      transform:translate(-50%, -50%) scale(1);
+      opacity:1;
+    }
+    .success-toast-icon{
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--c-success), #1a8a49);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 10px 24px rgba(34,164,89,0.36);
+      margin:0 auto 14px;
+      position:relative;
+    }
+    .success-toast-icon svg{ width:28px; height:28px; }
+    .success-toast-icon::after{
+      content:"";
+      position:absolute;
+      inset:-6px;
+      border-radius:50%;
+      border:2.5px solid var(--c-success);
+      opacity:0;
+      transform:scale(0.85);
+    }
+    .success-toast.is-visible .success-toast-icon::after{
+      animation:toastBurst 900ms ease-out 150ms forwards;
+    }
+    @keyframes toastBurst{
+      0%{ opacity:0.7; transform:scale(0.85); }
+      100%{ opacity:0; transform:scale(1.8); }
+    }
+    .success-toast-title{
+      font-size:16px;
+      font-weight:700;
+      color:var(--c-text);
+      letter-spacing:-0.3px;
+      line-height:1.2;
+      margin-bottom:5px;
+    }
+    .success-toast-sub{
+      font-size:10px;
+      font-weight:500;
+      color:var(--c-muted);
+      line-height:1.4;
+      margin-bottom:14px;
+      padding:0 8px;
+    }
+    .success-toast-meta{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      padding-top:12px;
+      border-top:1px solid var(--c-surface);
+    }
+    .success-toast-stat{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      font-size:8.5px;
+      font-weight:700;
+      color:var(--c-success);
+      text-transform:uppercase;
+      letter-spacing:0.4px;
+      background:var(--c-success-soft);
+      padding:4px 10px;
+      border-radius:99px;
+    }
+    .success-toast-stat::before{
+      content:"";
+      width:5px;height:5px;border-radius:50%;
+      background:var(--c-success);
+    }
+    .success-toast-stat.is-muted{
+      color:var(--c-muted);
+      background:var(--c-surface);
+    }
+    .success-toast-stat.is-muted::before{
+      background:var(--c-muted);
+    }
+
+    /* Panel principal (browser-style) · scale 0.95 + perspectiva + sombra +10% */
+    .panel{
+      position:absolute;
+      inset:50px;
+      background:#FFFFFF;
+      border-radius:16px;
+      /* Sombra +10% más notoria · inset 50px asegura que no se corte */
+      box-shadow:0 26px 66px rgba(45,37,96,0.22),
+                 0 9px 24px rgba(45,37,96,0.12),
+                 0 1px 3px rgba(0,0,0,0.05);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      z-index:2;
+      /* Scale 0.95 + tilt 3D sutil */
+      transform:scale(0.95) rotateX(1.4deg) rotateY(-0.6deg) rotate(-0.7deg);
+      transform-origin:center center;
+      transform-style:preserve-3d;
+    }
+
+    .panel-titlebar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 16px 10px;
+      border-bottom:1px solid var(--c-surface);
+    }
+    .traffic{ display:flex; gap:5px; }
+    .traffic span{
+      width:9px; height:9px; border-radius:50%; display:inline-block;
+    }
+    .traffic span:nth-child(1){ background:#FF5F57; }
+    .traffic span:nth-child(2){ background:#FEBC2E; }
+    .traffic span:nth-child(3){ background:#28C840; }
+    .dash-url{
+      flex:1;
+      background:var(--c-surface);
+      border-radius:6px;
+      padding:4px 10px;
+      font-size:9px;
+      color:var(--c-muted);
+      font-weight:500;
+      letter-spacing:0.2px;
+      text-align:center;
+    }
+
+    .panel-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      padding:14px 20px 12px;
+      border-bottom:1px solid var(--c-surface);
+    }
+    .panel-title{
+      font-size:13px;
+      font-weight:700;
+      color:var(--c-text);
+      display:block;
+      line-height:1.2;
+    }
+    .panel-subtitle{
+      font-size:9px;
+      color:var(--c-muted);
+      display:block;
+      margin-top:2px;
+    }
+    .live-pill{
+      background:var(--c-success-soft);
+      color:var(--c-success);
+      border:1px solid var(--c-success);
+      font-size:8px;
+      font-weight:700;
+      padding:3px 10px;
+      border-radius:20px;
+      display:inline-flex;
+      align-items:center;
+      letter-spacing:0.3px;
+      text-transform:uppercase;
+    }
+    .live-pill-dot{
+      width:6px;height:6px;border-radius:50%;
+      background:var(--c-success);
+      display:inline-block;margin-right:5px;
+      animation:pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+    /* Content area · contiene los 4 estados */
+    .panel-content{
+      flex:1;
+      position:relative;
+      padding:20px;
+      overflow:hidden;
+    }
+
+    /* Cada estado se superpone, transition vía opacity */
+    .state{
+      position:absolute;
+      inset:20px;
+      display:flex;
+      flex-direction:column;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity var(--anim-state-duration) ease-in-out;
+    }
+    .state.is-active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    /* ─── STATE 1: Drop zone ─── */
+    .state-drop{
+      align-items:center;
+      justify-content:center;
+    }
+    .drop-zone{
+      width:420px;
+      height:240px;
+      border:2px dashed var(--c-mid);
+      border-radius:18px;
+      background:var(--c-xlight);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      position:relative;
+      transition:border-color 300ms ease-out, background 300ms ease-out, transform 300ms ease-out;
+    }
+    .drop-zone.is-dragover{
+      border-color:var(--c-success);
+      background:var(--c-success-soft);
+      transform:scale(1.02);
+      box-shadow:0 0 0 4px rgba(34,164,89,0.12), 0 8px 24px rgba(74,60,174,0.18);
+    }
+    .drop-zone-icon{
+      width:56px;
+      height:56px;
+      border-radius:15px;
+      background:linear-gradient(135deg, var(--c-mid), var(--c-main));
+      color:#FFFFFF;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 8px 20px rgba(107,92,231,0.28);
+    }
+    .drop-zone-icon svg{ width:28px; height:28px; }
+    .drop-zone strong{
+      font-size:16px;
+      font-weight:700;
+      color:var(--c-text);
+      margin-top:6px;
+    }
+    .drop-zone span{
+      font-size:11px;
+      font-weight:600;
+      color:var(--c-muted);
+      letter-spacing:0.6px;
+      text-transform:uppercase;
+    }
+
+    /* File icon que entra hacia el drop zone · cápsula más grande y legible */
+    .file-icon{
+      position:absolute;
+      top:30px;
+      right:50px;
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      padding:9px 14px 9px 10px;
+      background:#FFFFFF;
+      border:1px solid var(--c-border);
+      border-radius:10px;
+      box-shadow:0 8px 20px rgba(45,37,96,0.20);
+      font-size:11px;
+      font-weight:600;
+      color:var(--c-text);
+      opacity:0;
+      transform:translateX(40px) translateY(-10px) rotate(8deg) scale(0.9);
+      transition:opacity 400ms ease-out, transform 400ms ease-out;
+      z-index:5;
+      pointer-events:none;
+    }
+    .file-icon-pdf{
+      width:24px;
+      height:30px;
+      background:var(--c-mid);
+      border-radius:4px;
+      position:relative;
+      flex-shrink:0;
+    }
+    .file-icon-pdf::after{
+      content:"PDF";
+      position:absolute;
+      bottom:3px;
+      left:0;right:0;
+      text-align:center;
+      font-size:8px;
+      font-weight:700;
+      color:#FFFFFF;
+      letter-spacing:0.5px;
+    }
+    .file-icon-pdf::before{
+      content:"";
+      position:absolute;
+      top:0;
+      right:0;
+      width:8px;height:8px;
+      background:linear-gradient(225deg, #FFFFFF 50%, transparent 50%);
+    }
+    .file-icon.is-flying{
+      opacity:1;
+      transform:translateX(-80px) translateY(60px) rotate(-3deg) scale(1);
+    }
+    .file-icon.is-dropping{
+      opacity:0;
+      transform:translateX(-150px) translateY(130px) rotate(-8deg) scale(0.6);
+    }
+
+    /* ─── STATE 2: Processing · ahora es un POPUP con backdrop blur
+       sobre la pantalla anterior (state-drop) que se mantiene visible. ─── */
+    .state-processing{
+      align-items:center;
+      justify-content:center;
+      /* Backdrop blur sólo sobre el contenido detrás · sin oscurecer */
+      background:transparent;
+      backdrop-filter:blur(5px);
+      -webkit-backdrop-filter:blur(5px);
+      z-index:30;
+    }
+    /* Mantener state-drop visible mientras processing está activo (popup overlay) */
+    .panel-content.is-processing-popup .state-drop{
+      opacity:1 !important;
+      pointer-events:none;
+    }
+    .processing-card{
+      width:560px;
+      padding:30px 32px 26px;
+      background:#FFFFFF;
+      border-radius:20px;
+      box-shadow:0 34px 70px rgba(45,37,96,0.30),
+                 0 14px 32px rgba(45,37,96,0.16),
+                 0 0 0 1px rgba(107,92,231,0.10);
+      position:relative;
+      overflow:hidden;
+      transform:scale(0.9);
+      opacity:0;
+      transition:transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                 opacity 350ms ease-out;
+    }
+    .state-processing.is-active .processing-card{
+      transform:scale(1);
+      opacity:1;
+    }
+    /* Halo sutil de fondo · ambient glow morado */
+    .processing-card::before{
+      content:"";
+      position:absolute;
+      width:200px;height:200px;border-radius:50%;
+      background:radial-gradient(circle, rgba(107,92,231,0.10) 0%, transparent 70%);
+      top:-100px;right:-50px;
+      pointer-events:none;
+    }
+    .processing-header{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:20px;
+      position:relative;
+      z-index:1;
+    }
+    /* File preview visual · documento con pulse */
+    .processing-file{
+      width:50px;height:60px;
+      background:linear-gradient(180deg, #FFFFFF 0%, #F8F6FE 100%);
+      border:2px solid var(--c-mid);
+      border-radius:7px;
+      position:relative;
+      flex-shrink:0;
+      box-shadow:0 4px 12px rgba(107,92,231,0.18);
+      overflow:hidden;
+      animation:filePulse 1.6s ease-in-out infinite;
+    }
+    @keyframes filePulse{
+      0%,100%{ transform:translateY(0); box-shadow:0 4px 12px rgba(107,92,231,0.18); }
+      50%{ transform:translateY(-2px); box-shadow:0 8px 18px rgba(107,92,231,0.28); }
+    }
+    .processing-file::after{
+      content:"PDF";
+      position:absolute;
+      bottom:5px;
+      left:0;right:0;
+      text-align:center;
+      font-size:9px;
+      font-weight:800;
+      color:var(--c-mid);
+      letter-spacing:0.5px;
+    }
+    /* Líneas de "scan" dentro del file */
+    .processing-file-scan{
+      position:absolute;
+      top:8px;
+      left:6px;right:6px;
+      height:1.5px;
+      background:var(--c-mid);
+      opacity:0.4;
+      border-radius:1px;
+      box-shadow:0 4px 0 0 rgba(107,92,231,0.4), 0 8px 0 0 rgba(107,92,231,0.25);
+    }
+    .processing-file-scan::after{
+      content:"";
+      position:absolute;
+      top:-6px;
+      left:-2px;right:-2px;
+      height:14px;
+      background:linear-gradient(180deg, transparent 0%, rgba(107,92,231,0.6) 50%, transparent 100%);
+      animation:scanLine 1.8s ease-in-out infinite;
+    }
+    @keyframes scanLine{
+      0%,100%{ transform:translateY(0); opacity:0.8; }
+      50%{ transform:translateY(28px); opacity:1; }
+    }
+    .processing-text{ display:flex; flex-direction:column; line-height:1.2; flex:1; }
+    .processing-title{
+      font-size:14px;
+      font-weight:700;
+      color:var(--c-text);
+    }
+    .processing-meta{
+      font-size:10px;
+      font-weight:500;
+      color:var(--c-muted);
+      margin-top:4px;
+    }
+    .processing-percent-big{
+      font-size:26px;
+      font-weight:800;
+      color:var(--c-mid);
+      font-variant-numeric:tabular-nums;
+      letter-spacing:-0.5px;
+      line-height:1;
+    }
+
+    /* Barra de progreso con shimmer animado */
+    .processing-bar{
+      height:12px;
+      background:var(--c-surface);
+      border-radius:99px;
+      overflow:hidden;
+      margin-bottom:18px;
+      position:relative;
+    }
+    .processing-bar-fill{
+      height:100%;
+      background:linear-gradient(90deg, var(--c-main) 0%, var(--c-mid) 50%, var(--c-light) 100%);
+      background-size:200% 100%;
+      width:0%;
+      transition:width 2400ms cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius:99px;
+      position:relative;
+      animation:gradientShift 2.5s ease-in-out infinite;
+    }
+    @keyframes gradientShift{
+      0%,100%{ background-position:0% 50%; }
+      50%{ background-position:100% 50%; }
+    }
+    .processing-bar-fill::after{
+      content:"";
+      position:absolute;
+      top:0; bottom:0;
+      width:60px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+      animation:shimmer 1.4s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{ left:-60px; }
+      100%{ left:460px; }
+    }
+    .state-processing.is-active .processing-bar-fill{
+      width:100%;
+    }
+
+    /* Contador en vivo · movimientos detectados */
+    .processing-detected{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
+      padding:10px 12px;
+      background:linear-gradient(90deg, var(--c-xlight) 0%, rgba(238,237,254,0.4) 100%);
+      border:1px solid rgba(107,92,231,0.15);
+      border-radius:10px;
+      position:relative;
+      z-index:1;
+      overflow:hidden;
+    }
+    .processing-detected-icon{
+      width:28px;height:28px;border-radius:8px;
+      background:linear-gradient(135deg, var(--c-mid), var(--c-main));
+      color:#FFFFFF;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+      box-shadow:0 4px 10px rgba(107,92,231,0.28);
+    }
+    .processing-detected-icon svg{ width:14px;height:14px; }
+    .processing-detected-text{
+      flex:1;
+      display:flex;
+      align-items:baseline;
+      gap:6px;
+      line-height:1;
+    }
+    .processing-detected-num{
+      font-size:20px;
+      font-weight:800;
+      color:var(--c-main);
+      font-variant-numeric:tabular-nums;
+      letter-spacing:-0.4px;
+    }
+    .processing-detected-label{
+      font-size:9.5px;
+      font-weight:600;
+      color:var(--c-muted);
+    }
+    .processing-detected-mini{
+      display:flex;
+      gap:8px;
+      flex-shrink:0;
+    }
+    .processing-detected-mini-stat{
+      display:inline-flex;
+      align-items:center;
+      gap:3px;
+      padding:3px 7px;
+      background:#FFFFFF;
+      border:1px solid var(--c-surface);
+      border-radius:99px;
+      font-size:8px;
+      font-weight:700;
+      font-variant-numeric:tabular-nums;
+      color:var(--c-text);
+      letter-spacing:0.2px;
+    }
+    .processing-detected-mini-stat.is-positive{ color:var(--c-success); }
+    .processing-detected-mini-stat.is-negative{ color:var(--c-error); }
+    .processing-detected-mini-stat-dot{
+      width:5px;height:5px;border-radius:50%;
+    }
+    .is-positive .processing-detected-mini-stat-dot{ background:var(--c-success); }
+    .is-negative .processing-detected-mini-stat-dot{ background:var(--c-error); }
+
+    /* Steps · indicadores que se iluminan conforme avanza el progreso */
+    .processing-steps{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      position:relative;
+      z-index:1;
+    }
+    .processing-step{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 11px;
+      border-radius:99px;
+      font-size:10px;
+      font-weight:600;
+      color:var(--c-muted);
+      background:var(--c-surface);
+      transition:background 400ms ease-out, color 400ms ease-out;
+    }
+    .processing-step-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--c-border);
+      flex-shrink:0;
+      transition:background 400ms ease-out;
+    }
+    .processing-step.is-done{
+      background:var(--c-success-soft);
+      color:var(--c-success);
+    }
+    .processing-step.is-done .processing-step-dot{
+      background:var(--c-success);
+    }
+    .processing-step.is-active{
+      background:var(--c-xlight);
+      color:var(--c-mid);
+    }
+    .processing-step.is-active .processing-step-dot{
+      background:var(--c-mid);
+      animation:pulse 1s ease-in-out infinite;
+    }
+    .processing-step-arrow{
+      color:var(--c-border);
+      font-size:8px;
+      margin:0 -2px;
+    }
+
+    /* ─── STATE 3: Classified table ─── */
+    .state-table{
+      gap:12px;
+    }
+    /* Separación extra entre stats strip y la tabla */
+    .state-table .table-stats + .table-wrap{
+      margin-top:6px;
+    }
+    .table-heading{
+      font-size:11px;
+      font-weight:700;
+      color:var(--c-text);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .table-heading-meta{
+      margin-left:auto;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+    }
+    .ai-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:3px 9px 3px 7px;
+      background:var(--c-xlight);
+      border:1px solid rgba(107,92,231,0.22);
+      border-radius:99px;
+      font-size:8px;
+      font-weight:700;
+      color:var(--c-mid);
+      text-transform:uppercase;
+      letter-spacing:0.4px;
+    }
+    .ai-pill svg{ width:10px; height:10px; }
+    .ai-pill-dot{
+      width:5px;height:5px;border-radius:50%;background:var(--c-mid);
+      animation:pulse 1.2s ease-in-out infinite;
+    }
+
+    /* Stats strip · 4 cards encerrados en una pill neutra (estilo card-card) */
+    .table-stats{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:0;
+      background:var(--c-surface);
+      border-radius:12px;
+      padding:12px 6px;
+      border:1px solid rgba(45,37,96,0.06);
+    }
+    .table-stat{
+      background:transparent;
+      border-radius:0;
+      padding:0 14px;
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      border-right:1px solid rgba(45,37,96,0.08);
+    }
+    .table-stat:last-child{ border-right:none; }
+    .table-stat-label{
+      font-size:7.5px;
+      font-weight:600;
+      color:var(--c-muted);
+      text-transform:uppercase;
+      letter-spacing:0.4px;
+    }
+    .table-stat-value{
+      font-size:13px;
+      font-weight:700;
+      color:var(--c-text);
+      line-height:1;
+      font-variant-numeric:tabular-nums;
+    }
+    .table-stat-value.is-positive{ color:var(--c-success); }
+    .table-stat-value.is-negative{ color:var(--c-error); }
+    .table-stat.is-progress .table-stat-value{
+      color:var(--c-mid);
+      display:inline-flex;
+      align-items:baseline;
+      gap:2px;
+    }
+    .table-stat-progress-total{
+      font-size:10px;font-weight:600;color:var(--c-muted);
+    }
+
+    .table-wrap{
+      flex:1;
+      background:#FFFFFF;
+      border:1px solid var(--c-surface);
+      border-radius:10px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+
+    /* Footer con info de IA */
+    .table-footer{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:8px 12px;
+      background:var(--c-xlight);
+      border:1px solid rgba(107,92,231,0.15);
+      border-radius:8px;
+      font-size:8.5px;
+      color:var(--c-text);
+      font-weight:500;
+    }
+    .table-footer-icon{
+      width:18px;height:18px;border-radius:5px;
+      background:var(--c-mid);color:#FFFFFF;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+    }
+    .table-footer-icon svg{ width:10px; height:10px; }
+    .table-footer-text{
+      display:flex; flex-direction:column; line-height:1.25;
+      flex:1; margin-left:8px;
+    }
+    .table-footer-text strong{
+      font-weight:700; color:var(--c-text); font-size:9px;
+    }
+    .table-footer-text span{
+      font-size:8px; color:var(--c-muted); font-weight:500;
+    }
+    .table-footer-confidence{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:4px 9px;
+      background:#FFFFFF;
+      border:1px solid rgba(34,164,89,0.25);
+      border-radius:99px;
+      font-size:8px;
+      font-weight:700;
+      color:var(--c-success);
+      letter-spacing:0.3px;
+      flex-shrink:0;
+    }
+    .table-footer-confidence-dot{
+      width:5px;height:5px;border-radius:50%;background:var(--c-success);
+    }
+    /* Grid del row · columna Monto alineada con el card "Egresos" del stats pill */
+    .row-head{
+      display:grid;
+      grid-template-columns:70px 240px 130px 1fr;
+      gap:12px;
+      padding:9px 14px;
+      background:var(--c-surface);
+      font-size:9px;
+      font-weight:700;
+      color:var(--c-muted);
+      letter-spacing:0.4px;
+      text-transform:uppercase;
+    }
+    .row-head > span:nth-child(4){ padding-left:24px; }
+    .row{
+      display:grid;
+      grid-template-columns:70px 240px 130px 1fr;
+      gap:12px;
+      padding:11px 14px;
+      border-bottom:1px solid var(--c-surface);
+      align-items:center;
+      font-size:11px;
+      color:var(--c-text);
+      transition:background 400ms ease-out;
+    }
+    .row > .cell-badge{ padding-left:24px; }
+    .row:last-child{ border-bottom:none; }
+    .row.is-classifying{
+      background:var(--c-highlight);
+    }
+    .cell-date{
+      font-size:10px;
+      font-weight:600;
+      color:var(--c-muted);
+      font-variant-numeric:tabular-nums;
+    }
+    .cell-desc{ font-weight:500; }
+    .cell-amt{
+      font-weight:700;
+      font-variant-numeric:tabular-nums;
+      text-align:left;
+    }
+    .cell-amt.positive{ color:var(--c-success); }
+    .cell-amt.negative{ color:var(--c-error); }
+    .cell-badge{
+      text-align:left;
+      min-height:22px;
+    }
+    .badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:6px;
+      font-size:9.5px;
+      font-weight:700;
+      letter-spacing:0.3px;
+      text-transform:uppercase;
+      opacity:0;
+      transform:scale(0.6);
+      transition:opacity 300ms ease-out, transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .badge.is-classified{
+      opacity:1;
+      transform:scale(1);
+    }
+    .badge.green{
+      background:var(--c-success-soft);
+      color:var(--c-success);
+      border:1px solid rgba(34,164,89,0.3);
+    }
+    .badge.red{
+      background:var(--c-error-soft);
+      color:var(--c-error);
+      border:1px solid rgba(217,79,79,0.3);
+    }
+
+    /* ─── STATE 4: Consolidated view ─── */
+    .state-consolidated{
+      gap:14px;
+    }
+    .cons-heading{
+      font-size:11px;
+      font-weight:700;
+      color:var(--c-text);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .cons-heading-meta{
+      font-size:9px;
+      font-weight:500;
+      color:var(--c-muted);
+      margin-left:auto;
+    }
+    .categories{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+    }
+    .cat-card{
+      background:var(--c-surface);
+      border-radius:10px;
+      padding:11px 14px;
+      border:1px solid transparent;
+      transition:border-color 300ms ease-out;
+    }
+    .cat-card.is-positive{
+      background:#F1FBF5;
+      border-color:rgba(34,164,89,0.18);
+    }
+    .cat-card.is-negative{
+      background:#FCF2F2;
+      border-color:rgba(217,79,79,0.18);
+    }
+    .cat-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:5px;
+    }
+    .cat-label{
+      font-size:8.5px;
+      font-weight:700;
+      color:var(--c-text);
+      letter-spacing:0.3px;
+      text-transform:uppercase;
+    }
+    .cat-count{
+      font-size:8px;
+      font-weight:500;
+      color:var(--c-muted);
+    }
+    .cat-amount{
+      font-size:17px;
+      font-weight:700;
+      color:var(--c-text);
+      letter-spacing:-0.3px;
+      line-height:1;
+      margin-bottom:8px;
+      font-variant-numeric:tabular-nums;
+    }
+    .cat-card.is-positive .cat-amount{ color:var(--c-success); }
+    .cat-card.is-negative .cat-amount{ color:var(--c-error); }
+    .cat-bar{
+      height:4px;
+      background:rgba(45,37,96,0.08);
+      border-radius:99px;
+      overflow:hidden;
+    }
+    .cat-bar-fill{
+      height:100%;
+      width:0;
+      background:var(--c-mid);
+      border-radius:99px;
+      transition:width 800ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .cat-card.is-positive .cat-bar-fill{ background:var(--c-success); }
+    .cat-card.is-negative .cat-bar-fill{ background:var(--c-error); }
+    .state-consolidated.is-bars-grown .cat-bar-fill{ width:var(--w, 50%); }
+
+    .net-card{
+      background:linear-gradient(135deg, var(--c-main) 0%, var(--c-mid) 100%);
+      border-radius:12px;
+      padding:14px 18px;
+      color:#FFFFFF;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      box-shadow:0 8px 20px rgba(74,60,174,0.25);
+      position:relative;
+      overflow:hidden;
+    }
+    .net-card::after{
+      content:"";
+      position:absolute;
+      width:120px;height:120px;border-radius:50%;
+      background:rgba(255,255,255,0.08);
+      top:-40px;right:-30px;
+    }
+    .net-label{
+      font-size:9px;
+      font-weight:600;
+      opacity:0.85;
+      letter-spacing:0.4px;
+      text-transform:uppercase;
+      display:block;
+      margin-bottom:3px;
+      position:relative;
+      z-index:1;
+    }
+    .net-sub{
+      font-size:8.5px;
+      font-weight:500;
+      opacity:0.75;
+      position:relative;
+      z-index:1;
+    }
+    .net-amount{
+      font-size:24px;
+      font-weight:800;
+      letter-spacing:-0.5px;
+      line-height:1;
+      font-variant-numeric:tabular-nums;
+      position:relative;
+      z-index:1;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:9px 14px;
+      border-radius:9px;
+      font-family:'Poppins', sans-serif;
+      font-size:10px;
+      font-weight:700;
+      cursor:default;
+      transition:transform 200ms ease-out, box-shadow 200ms ease-out;
+    }
+    .btn-secondary{
+      background:#FFFFFF;
+      border:1px solid var(--c-border);
+      color:var(--c-text);
+    }
+    .btn-primary{
+      background:linear-gradient(135deg, var(--c-mid), var(--c-main));
+      color:#FFFFFF;
+      border:none;
+      box-shadow:0 4px 12px rgba(107,92,231,0.32);
+    }
+    .btn svg{ width:11px; height:11px; }
+
+    /* Reveal animations · estado 4 escalonado */
+    .state-consolidated .cons-heading,
+    .state-consolidated .categories,
+    .state-consolidated .net-card,
+    .state-consolidated .actions{
+      opacity:0;
+      transform:translateY(8px);
+    }
+    .state-consolidated.is-revealed .cons-heading{
+      animation:consReveal 380ms ease-out 0ms forwards;
+    }
+    .state-consolidated.is-revealed .categories{
+      animation:consReveal 380ms ease-out 100ms forwards;
+    }
+    .state-consolidated.is-revealed .net-card{
+      animation:consReveal 380ms ease-out 350ms forwards;
+    }
+    .state-consolidated.is-revealed .actions{
+      animation:consReveal 380ms ease-out 500ms forwards;
+    }
+    @keyframes consReveal{
+      to{ opacity:1; transform:translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hidpi-wrap">
+  <div class="mockup" id="mockup">
+    <div class="ambient-glow"></div>
+
+    <!-- Backdrop con blur cuando aparece el popup -->
+    <div class="success-backdrop" id="successBackdrop"></div>
+
+    <!-- Popup centrado de éxito · estilo modal -->
+    <div class="success-toast" id="successBanner">
+      <div class="success-toast-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M5 12.5l4.5 4.5L19 7" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="success-toast-title">Cartola importada</div>
+      <div class="success-toast-sub">85 movimientos detectados y clasificados automáticamente en 4 categorías de presupuesto</div>
+      <div class="success-toast-meta">
+        <span class="success-toast-stat">96% confianza</span>
+        <span class="success-toast-stat is-muted">Procesado en 2.4s</span>
+      </div>
+    </div>
+
+    <!-- Panel principal -->
+    <div class="panel">
+      <div class="panel-titlebar">
+        <div class="traffic"><span></span><span></span><span></span></div>
+        <div class="dash-url">app.tapin.cl / cpa / cartola</div>
+      </div>
+
+      <div class="panel-header">
+        <div>
+          <span class="panel-title">Cartola Inteligente</span>
+          <span class="panel-subtitle">Centro de Padres · Colegio San Francisco</span>
+        </div>
+        <span class="live-pill"><span class="live-pill-dot"></span>EN VIVO</span>
+      </div>
+
+      <div class="panel-content">
+
+        <!-- STATE 1: Drop zone -->
+        <div class="state state-drop is-active" id="stateDrop">
+          <div class="drop-zone" id="dropZone">
+            <div class="drop-zone-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <strong>Arrastra tu cartola aquí</strong>
+            <span>PDF · Excel · CSV</span>
+          </div>
+          <div class="file-icon" id="fileIcon">
+            <div class="file-icon-pdf"></div>
+            <span>cartola-marzo.pdf</span>
+          </div>
+        </div>
+
+        <!-- STATE 2: Processing -->
+        <div class="state state-processing" id="stateProcessing">
+          <div class="processing-card">
+            <div class="processing-header">
+              <div class="processing-file">
+                <span class="processing-file-scan"></span>
+              </div>
+              <div class="processing-text">
+                <span class="processing-title">Procesando cartola de Marzo 2026</span>
+                <span class="processing-meta">cartola-marzo.pdf · 247 KB · 85 movimientos</span>
+              </div>
+              <div class="processing-percent-big" id="progPercent">0%</div>
+            </div>
+            <div class="processing-bar">
+              <div class="processing-bar-fill" id="progBarFill"></div>
+            </div>
+            <div class="processing-steps">
+              <div class="processing-step" id="step1">
+                <span class="processing-step-dot"></span>
+                Leyendo PDF
+              </div>
+              <span class="processing-step-arrow">→</span>
+              <div class="processing-step" id="step2">
+                <span class="processing-step-dot"></span>
+                Extrayendo movimientos
+              </div>
+              <span class="processing-step-arrow">→</span>
+              <div class="processing-step" id="step3">
+                <span class="processing-step-dot"></span>
+                Clasificando con IA
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATE 3: Classified table -->
+        <div class="state state-table" id="stateTable">
+          <div class="table-heading">
+            <span>Movimientos detectados</span>
+            <span class="table-heading-meta">
+              <span class="ai-pill">
+                <span class="ai-pill-dot"></span>
+                IA clasificando <span id="aiCounter">0/5</span>
+              </span>
+            </span>
+          </div>
+
+          <!-- Stats strip · 4 mini cards con métricas en vivo -->
+          <div class="table-stats">
+            <div class="table-stat">
+              <span class="table-stat-label">Período</span>
+              <span class="table-stat-value">Mar 2026</span>
+            </div>
+            <div class="table-stat">
+              <span class="table-stat-label">Ingresos</span>
+              <span class="table-stat-value is-positive">+$16.450K</span>
+            </div>
+            <div class="table-stat">
+              <span class="table-stat-label">Egresos</span>
+              <span class="table-stat-value is-negative">−$187K</span>
+            </div>
+            <div class="table-stat is-progress">
+              <span class="table-stat-label">Clasificados</span>
+              <span class="table-stat-value">
+                <span id="aiCounter2">0</span><span class="table-stat-progress-total">/5</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <div class="row-head">
+              <span>Fecha</span>
+              <span>Descripción</span>
+              <span>Monto</span>
+              <span>Categoría</span>
+            </div>
+            <div class="row" data-row="0">
+              <span class="cell-date">01/03</span>
+              <span class="cell-desc">Transferencia cuota</span>
+              <span class="cell-amt positive">+$3.200.000</span>
+              <span class="cell-badge"><span class="badge green" data-badge="0">Cuotas anuales</span></span>
+            </div>
+            <div class="row" data-row="1">
+              <span class="cell-date">03/03</span>
+              <span class="cell-desc">Pago arriendo sala</span>
+              <span class="cell-amt negative">−$120.000</span>
+              <span class="cell-badge"><span class="badge red" data-badge="1">Gastos generales</span></span>
+            </div>
+            <div class="row" data-row="2">
+              <span class="cell-date">05/03</span>
+              <span class="cell-desc">Depósito bingo</span>
+              <span class="cell-amt positive">+$8.450.000</span>
+              <span class="cell-badge"><span class="badge green" data-badge="2">Bingo fin de año</span></span>
+            </div>
+            <div class="row" data-row="3">
+              <span class="cell-date">12/03</span>
+              <span class="cell-desc">Compra materiales</span>
+              <span class="cell-amt negative">−$67.500</span>
+              <span class="cell-badge"><span class="badge red" data-badge="3">Gastos generales</span></span>
+            </div>
+            <div class="row" data-row="4">
+              <span class="cell-date">22/03</span>
+              <span class="cell-desc">Entradas fin de año</span>
+              <span class="cell-amt positive">+$4.800.000</span>
+              <span class="cell-badge"><span class="badge green" data-badge="4">Evento fin de año</span></span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- STATE 4: Consolidated view -->
+        <div class="state state-consolidated" id="stateConsolidated">
+          <div class="cons-heading">
+            <span>Resumen por categorías</span>
+            <span class="cons-heading-meta">Marzo 2026 · auto-clasificado</span>
+          </div>
+
+          <div class="categories">
+            <div class="cat-card is-positive" style="--w:66%;">
+              <div class="cat-head">
+                <span class="cat-label">Cuotas anuales</span>
+                <span class="cat-count">48 mov.</span>
+              </div>
+              <div class="cat-amount">+$22.450.000</div>
+              <div class="cat-bar"><div class="cat-bar-fill"></div></div>
+            </div>
+            <div class="cat-card is-positive" style="--w:24%;">
+              <div class="cat-head">
+                <span class="cat-label">Bingo fin de año</span>
+                <span class="cat-count">12 mov.</span>
+              </div>
+              <div class="cat-amount">+$8.450.000</div>
+              <div class="cat-bar"><div class="cat-bar-fill"></div></div>
+            </div>
+            <div class="cat-card is-positive" style="--w:11%;">
+              <div class="cat-head">
+                <span class="cat-label">Evento fin de año</span>
+                <span class="cat-count">8 mov.</span>
+              </div>
+              <div class="cat-amount">+$3.800.000</div>
+              <div class="cat-bar"><div class="cat-bar-fill"></div></div>
+            </div>
+            <div class="cat-card is-negative" style="--w:6%;">
+              <div class="cat-head">
+                <span class="cat-label">Gastos generales</span>
+                <span class="cat-count">17 mov.</span>
+              </div>
+              <div class="cat-amount">−$1.940.000</div>
+              <div class="cat-bar"><div class="cat-bar-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="net-card">
+            <div>
+              <span class="net-label">Saldo neto del mes</span>
+              <span class="net-sub">85 movimientos clasificados</span>
+            </div>
+            <div class="net-amount">+$32.760.000</div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+              Exportar reporte PDF
+            </button>
+            <div class="btn-primary-wrap" id="btnPresupuestoWrap">
+              <span class="btn-primary-pulse"></span>
+              <button class="btn btn-primary" id="btnPresupuesto">
+                Ver en presupuesto
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+              <span class="btn-tap-finger" id="btnTapFinger"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+<script>
+(function(){
+  const mockup           = document.getElementById('mockup');
+  const successBanner    = document.getElementById('successBanner');
+  const successBackdrop  = document.getElementById('successBackdrop');
+
+  const stateDrop         = document.getElementById('stateDrop');
+  const stateProcessing   = document.getElementById('stateProcessing');
+  const stateTable        = document.getElementById('stateTable');
+  const stateConsolidated = document.getElementById('stateConsolidated');
+  const states            = [stateDrop, stateProcessing, stateTable, stateConsolidated];
+  const panelContent      = document.querySelector('.panel-content');
+
+  const dropZone   = document.getElementById('dropZone');
+  const fileIcon   = document.getElementById('fileIcon');
+  const progBar    = document.getElementById('progBarFill');
+  const progPct    = document.getElementById('progPercent');
+  const badges     = document.querySelectorAll('.badge[data-badge]');
+  const rows       = document.querySelectorAll('.state-table .row');
+  const aiCounter  = document.getElementById('aiCounter');
+  const aiCounter2 = document.getElementById('aiCounter2');
+
+  const timers = [];
+  function schedule(fn, delay){ timers.push(setTimeout(fn, delay)); }
+  function clearAllTimers(){
+    timers.forEach(clearTimeout);
+    timers.length = 0;
+  }
+
+  function setActiveState(el){
+    states.forEach(s => s.classList.remove('is-active'));
+    el.classList.add('is-active');
+  }
+
+  function animatePercent(from, to, duration){
+    const start = performance.now();
+    function tick(now){
+      const t = Math.min(1, (now-start)/duration);
+      const eased = t * (2 - t); // ease-out quad
+      const val = Math.round(from + (to-from)*eased);
+      progPct.textContent = val + '%';
+      if(t<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* Contador de movimientos detectados · 0→85 con stats de
+     ingresos/egresos subiendo proporcionalmente */
+  function animateMovementCounter(from, to, duration){
+    const elNum = document.getElementById('detectedNum');
+    const elIng = document.getElementById('detectedIngresos');
+    const elEgr = document.getElementById('detectedEgresos');
+    const targetIngresos = 68;
+    const targetEgresos = 17;
+    const start = performance.now();
+    function tick(now){
+      const t = Math.min(1, (now-start)/duration);
+      const eased = t * (2 - t);
+      const val = Math.round(from + (to-from)*eased);
+      if(elNum) elNum.textContent = val;
+      if(elIng) elIng.textContent = Math.round(targetIngresos * eased);
+      if(elEgr) elEgr.textContent = Math.round(targetEgresos * eased);
+      if(t<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function resetState(){
+    clearAllTimers();
+
+    if(panelContent) panelContent.classList.remove('is-processing-popup');
+    setActiveState(stateDrop);
+
+    dropZone.classList.remove('is-dragover');
+    fileIcon.classList.remove('is-flying','is-dropping');
+
+    progBar.style.transition = 'none';
+    progBar.style.width = '0%';
+    progPct.textContent = '0%';
+    void progBar.offsetWidth;
+    progBar.style.transition = '';
+
+    badges.forEach(b => b.classList.remove('is-classified'));
+    rows.forEach(r => r.classList.remove('is-classifying'));
+    if(aiCounter) aiCounter.textContent = '0/5';
+    if(aiCounter2) aiCounter2.textContent = '0';
+
+    // Reset de los steps del processing
+    ['step1','step2','step3'].forEach(id => {
+      const s = document.getElementById(id);
+      if(s) s.classList.remove('is-active','is-done');
+    });
+
+    // Reset del contador de movimientos
+    const dn = document.getElementById('detectedNum');
+    const di = document.getElementById('detectedIngresos');
+    const de = document.getElementById('detectedEgresos');
+    if(dn) dn.textContent = '0';
+    if(di) di.textContent = '0';
+    if(de) de.textContent = '0';
+
+    stateConsolidated.classList.remove('is-revealed','is-bars-grown');
+
+    successBanner.classList.remove('is-visible');
+    if(successBackdrop) successBackdrop.classList.remove('is-visible');
+
+    // Reset del botón "Ver en presupuesto" · vuelve al estado idle con pulse
+    const btn    = document.getElementById('btnPresupuesto');
+    const wrap   = document.getElementById('btnPresupuestoWrap');
+    const finger = document.getElementById('btnTapFinger');
+    if(btn) btn.classList.remove('is-hovering','is-pressed');
+    if(wrap) wrap.classList.remove('is-hidden-pulse');
+    if(finger) finger.classList.remove('is-tapping');
+  }
+
+  let loopActive = false;
+  let isVisible = true;
+
+  function runLoop(){
+    if(!loopActive) return;
+    resetState();
+    mockup.classList.remove('is-resetting');
+
+    /* ───── STAGE A: DROP ZONE → FILE INCOMING (0 → 2.5s) ───── */
+
+    // 0.8s: file icon vuela hacia el drop zone
+    schedule(()=>{
+      fileIcon.classList.add('is-flying');
+    }, 800);
+
+    // 1.7s: drop zone reacciona (dragover state)
+    schedule(()=>{
+      dropZone.classList.add('is-dragover');
+    }, 1700);
+
+    // 2.2s: file desaparece dentro del drop zone
+    schedule(()=>{
+      fileIcon.classList.remove('is-flying');
+      fileIcon.classList.add('is-dropping');
+    }, 2200);
+
+    /* ───── STAGE B: PROCESSING (2.5 → 5.5s) ───── */
+
+    // 2.5s: processing como POPUP sobre stateDrop · stateDrop sigue visible
+    schedule(()=>{
+      stateProcessing.classList.add('is-active');
+      panelContent.classList.add('is-processing-popup');
+      animatePercent(0, 100, 2400);
+      const s1 = document.getElementById('step1');
+      if(s1) s1.classList.add('is-active');
+    }, 2500);
+    // 3.3s (~33%): step 1 done, step 2 active
+    schedule(()=>{
+      const s1 = document.getElementById('step1');
+      const s2 = document.getElementById('step2');
+      if(s1){ s1.classList.remove('is-active'); s1.classList.add('is-done'); }
+      if(s2) s2.classList.add('is-active');
+    }, 3300);
+    // 4.3s (~70%): step 2 done, step 3 active
+    schedule(()=>{
+      const s2 = document.getElementById('step2');
+      const s3 = document.getElementById('step3');
+      if(s2){ s2.classList.remove('is-active'); s2.classList.add('is-done'); }
+      if(s3) s3.classList.add('is-active');
+    }, 4300);
+    // 5.2s (~100%): step 3 done
+    schedule(()=>{
+      const s3 = document.getElementById('step3');
+      if(s3){ s3.classList.remove('is-active'); s3.classList.add('is-done'); }
+    }, 5200);
+
+    /* ───── STAGE C: TABLE + AI CLASSIFICATION (5.5 → 10.5s) ───── */
+
+    // 5.5s: cierra popup processing, activa table
+    schedule(()=>{
+      panelContent.classList.remove('is-processing-popup');
+      setActiveState(stateTable);
+    }, 5500);
+
+    // 6.2s en adelante: badges se clasifican uno por uno con stagger 850ms
+    const BADGE_START = 6200;
+    const BADGE_STAGGER = 850;
+    badges.forEach((badge, i) => {
+      const t = BADGE_START + i * BADGE_STAGGER;
+      // Highlight de la row siendo clasificada
+      schedule(()=>{
+        if(rows[i]) rows[i].classList.add('is-classifying');
+      }, t - 200);
+      // Aparece el badge + actualiza contadores
+      schedule(()=>{
+        badge.classList.add('is-classified');
+        const n = i + 1;
+        if(aiCounter) aiCounter.textContent = n + '/5';
+        if(aiCounter2) aiCounter2.textContent = String(n);
+      }, t);
+      // Quita el highlight 500ms después
+      schedule(()=>{
+        if(rows[i]) rows[i].classList.remove('is-classifying');
+      }, t + 500);
+    });
+
+    /* ───── STAGE D: CONSOLIDATED VIEW (10.7 → 14s) ───── */
+
+    // 10.7s: transition a vista consolidada
+    schedule(()=>{
+      setActiveState(stateConsolidated);
+      void stateConsolidated.offsetWidth;
+      stateConsolidated.classList.add('is-revealed');
+    }, 10700);
+
+    // 11.2s: barras de categoría crecen
+    schedule(()=>{
+      stateConsolidated.classList.add('is-bars-grown');
+    }, 11200);
+
+    /* ───── STAGE D-bis: CLICK sobre el botón (patrón Pagar ahora del Comedor)
+       - 13.0s: hover state (botón se eleva, glow aumenta)
+       - 13.5s: tap ripple aparece desde el centro + button press · pulse se oculta
+       - 13.75s: release del press
+       - 14.0s: popup aparece */
+
+    // 13.0s: hover state · llamada visual antes del tap
+    schedule(()=>{
+      const btn = document.getElementById('btnPresupuesto');
+      if(btn) btn.classList.add('is-hovering');
+    }, 13000);
+
+    // 13.5s: tap · ripple + press + pulse oculto
+    schedule(()=>{
+      const btn    = document.getElementById('btnPresupuesto');
+      const wrap   = document.getElementById('btnPresupuestoWrap');
+      const finger = document.getElementById('btnTapFinger');
+      if(btn){
+        btn.classList.remove('is-hovering');
+        btn.classList.add('is-pressed');
+      }
+      if(wrap) wrap.classList.add('is-hidden-pulse');
+      if(finger){
+        finger.classList.remove('is-tapping');
+        void finger.offsetWidth;
+        finger.classList.add('is-tapping');
+      }
+    }, 13500);
+
+    // 13.75s: release (button vuelve al tamaño normal)
+    schedule(()=>{
+      const btn = document.getElementById('btnPresupuesto');
+      if(btn) btn.classList.remove('is-pressed');
+    }, 13750);
+
+    // 14.1s: cleanup del ripple
+    schedule(()=>{
+      const finger = document.getElementById('btnTapFinger');
+      if(finger) finger.classList.remove('is-tapping');
+    }, 14100);
+
+    /* ───── STAGE E: SUCCESS POPUP centrado (14s) ───── */
+
+    schedule(()=>{
+      if(successBackdrop) successBackdrop.classList.add('is-visible');
+      successBanner.classList.add('is-visible');
+    }, 14000);
+
+    /* ───── STAGE F: RESET (17.6 → 18.3s) · matchea timing global ───── */
+
+    schedule(()=>{
+      mockup.classList.add('is-resetting');
+    }, 17600);
+    schedule(()=>{
+      runLoop();
+    }, 18300);
+  }
+
+  function startLoop(){
+    if(loopActive) return;
+    loopActive = true;
+    runLoop();
+  }
+  function stopLoop(){
+    loopActive = false;
+    clearAllTimers();
+  }
+
+  /* IntersectionObserver · pausa cuando mockup fuera de viewport */
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        isVisible = e.isIntersecting;
+        if(isVisible){ startLoop(); }
+        else { stopLoop(); }
+      });
+    }, { threshold: 0.05 });
+    io.observe(mockup);
+  }
+
+  /* Pausa cuando la tab está oculta */
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden){ stopLoop(); }
+    else if(isVisible){ startLoop(); }
+  });
+
+  /* PostMessage del parent (prodv7Tabs en main.js) controla start/stop
+     del loop según qué producto está activo. Al recibir 'mockup-start',
+     reinicia el loop desde el principio para que el usuario siempre vea
+     el ciclo completo cuando llega al producto. */
+  window.addEventListener('message', (e) => {
+    if(!e.data || typeof e.data.type !== 'string') return;
+    if(e.data.type === 'mockup-start'){
+      stopLoop();
+      startLoop();
+    } else if(e.data.type === 'mockup-stop'){
+      stopLoop();
+    }
+  });
+
+  /* Arranque inicial sólo si no hay parent (standalone). Cuando se embebe,
+     el parent vía postMessage controla el arranque. */
+  const isEmbedded = (window.parent !== window);
+  if(!isEmbedded){
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(startLoop);
+    } else {
+      window.addEventListener('load', startLoop);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>

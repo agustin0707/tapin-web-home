@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- iPad embed: si la landing pasa ?frameless, la tarjeta del mockup va sin
+       fondo ni sombra (evita el "marco" al achicar el mockup). El PC nunca
+       recibe la bandera → este bloque queda inerte allí. -->
+  <script>try{if(location.search.indexOf('frameless')>-1){document.documentElement.classList.add('frameless');}}catch(e){}</script>
+  <style>.frameless .mockup{background:transparent!important;box-shadow:none!important;}.frameless .ambient-glow{display:none!important;}</style>
+  <meta charset="UTF-8" />
+  <title>Mockup · Comedor Escolar · Tap In Connect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --c-main:#4A3CAE;
+      --c-mid:#6B5CE7;
+      --c-light:#9B8EF0;
+      --c-xlight:#EEEDFE;
+      --c-text:#2C2B3A;
+      --c-muted:#6B6A7D;
+      --c-deep:#2D2560;
+      --c-border:#BBBAC6;
+      --c-surface:#F2F1F8;
+      --c-highlight:#EBE8FC;
+      --c-success:#22A459;
+      --c-success-soft:#E8F8EE;
+      --c-error:#D94F4F;
+      --c-error-soft:#FFF1F1;
+      /* Timings centralizados para tuneo · usar var(--anim-*) en rules */
+      --anim-orbit-duration:800ms;
+      --anim-orbit-delay-dash:150ms;
+      /* Easing simétrico ease-in-out · accel + decel naturales = fluido */
+      --anim-easing:cubic-bezier(0.65, 0, 0.35, 1);
+      --anim-reset-duration:300ms;
+      --shadow-card:0 20px 60px rgba(45,37,96,0.15), 0 4px 16px rgba(45,37,96,0.08);
+      /* Sombras originales · contenedor ahora 900×600 da espacio suficiente */
+      --shadow-phone:0 0 0 4px rgba(45,37,96,0.85), 0 24px 50px rgba(74,60,174,0.28);
+      --shadow-phone-dim:0 0 0 3px rgba(45,37,96,0.5), 0 12px 28px rgba(74,60,174,0.18);
+      --shadow-dash:0 12px 30px rgba(45,37,96,0.10), 0 2px 8px rgba(45,37,96,0.06);
+      --shadow-dash-active:0 24px 60px rgba(45,37,96,0.22), 0 4px 14px rgba(45,37,96,0.10);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+
+    /* Respeta prefers-reduced-motion: muestra estados finales sin animar */
+    @media (prefers-reduced-motion: reduce){
+      *, *::before, *::after{
+        animation-duration:0.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:0.01ms !important;
+        scroll-behavior:auto !important;
+      }
+    }
+
+    html,body{
+      width:100%;
+      min-height:100vh;
+      background:#F4F2FC;
+      font-family:'Poppins',sans-serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-rendering:optimizeLegibility;
+      color:var(--c-text);
+      margin:0;
+    }
+
+    /* HiDPI wrapper: solo activa el render 2x cuando el iframe está a
+       1800px CSS (caso integración en home). En standalone (viewport
+       menor) el wrapper es transparente y el mockup renderiza a 900×600
+       nativos. */
+    .hidpi-wrap{
+      display:contents;
+    }
+    @media (min-width:1800px){
+      /* En contexto de embed (iframe home a 1800px CSS): body transparente
+         para que el background del card padre se vea en las esquinas
+         redondeadas del mockup. En standalone (<1800px) se mantiene el
+         #F4F2FC del frame original. */
+      html,body{ background:transparent; }
+      .hidpi-wrap{
+        display:block;
+        width:1800px;
+        height:1200px;
+        position:relative;
+        flex-shrink:0;
+      }
+      .hidpi-wrap > .mockup{
+        transform:scale(2);
+        transform-origin:top left;
+        position:absolute;
+        top:0;
+        left:0;
+      }
+    }
+
+    .mockup{
+      width:900px;
+      height:600px;
+      background:linear-gradient(135deg, #F6F4FC 0%, #FFFFFF 55%, #F0EDFB 100%);
+      border-radius:20px;
+      box-shadow:var(--shadow-card);
+      position:relative;
+      overflow:hidden;
+      transition:opacity 300ms ease-in-out;
+    }
+    .mockup.is-resetting{opacity:0;}
+
+    /* Soft ambient glow that follows focus */
+    .ambient-glow{
+      position:absolute;
+      width:520px;
+      height:520px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(107,92,231,0.18) 0%, rgba(107,92,231,0) 70%);
+      pointer-events:none;
+      transition:transform 800ms cubic-bezier(0.65,0,0.35,1), opacity 800ms ease-in-out;
+      top:0;
+      left:0;
+      transform:translate(-80px,-40px);
+      z-index:1;
+    }
+    .mockup.is-dash-focus .ambient-glow{
+      transform:translate(380px,-40px);
+    }
+
+    /* Connector pulse · partícula que viaja del celular hacia el dashboard
+       cuando se confirma el pago · refuerza el "datos en vivo" */
+    .connector-pulse{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      background:radial-gradient(circle, #FFFFFF 0%, var(--c-mid) 60%, transparent 100%);
+      box-shadow:0 0 20px rgba(107,92,231,0.7), 0 0 40px rgba(107,92,231,0.4);
+      transform:translate(-50%, -50%) translateX(-50px) translateY(40px) scale(0);
+      opacity:0;
+      pointer-events:none;
+      z-index:6;
+    }
+    .connector-pulse.is-firing{
+      animation:connectorFire 1100ms cubic-bezier(0.4, 0, 0.6, 1) forwards;
+    }
+    @keyframes connectorFire{
+      0%   { transform:translate(-50%, -50%) translateX(-50px) translateY(40px)  scale(0);   opacity:0; }
+      15%  { transform:translate(-50%, -50%) translateX(-30px) translateY(20px)  scale(1.4); opacity:1; }
+      85%  { transform:translate(-50%, -50%) translateX(180px) translateY(-30px) scale(1);   opacity:1; }
+      100% { transform:translate(-50%, -50%) translateX(220px) translateY(-50px) scale(0);   opacity:0; }
+    }
+    /* Trail del connector · sigue al pulse principal */
+    .connector-pulse::before{
+      content:"";
+      position:absolute;
+      width:8px;height:8px;border-radius:50%;
+      background:rgba(107,92,231,0.5);
+      filter:blur(3px);
+      top:50%;left:50%;
+      transform:translate(-50%, -50%);
+    }
+
+    /* ─── DASHBOARD (back layer initially) ─── */
+    .dashboard{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:600px;
+      height:460px;
+      background:#FFFFFF;
+      border-radius:16px;
+      box-shadow:var(--shadow-dash);
+      padding:18px 20px;
+      display:flex;
+      flex-direction:column;
+      /* Idle (inactivo): asomado a la derecha · blur sutil */
+      transform:translate3d(-50%, -50%, 0) translateX(200px) scale(0.58) rotate(6deg);
+      transform-origin:center center;
+      opacity:1;
+      z-index:2;
+      filter:saturate(0.85) blur(1.4px);
+      will-change:transform, filter;
+      transition:box-shadow 800ms var(--anim-easing),
+                 filter 700ms var(--anim-easing);
+    }
+    .mockup.is-dash-focus .dashboard{
+      /* Delay reducido a 150ms para que la motion se sienta más continua */
+      animation:dashSlideIn var(--anim-orbit-duration) var(--anim-easing) var(--anim-orbit-delay-dash) forwards;
+      box-shadow:var(--shadow-dash-active);
+      filter:saturate(1) blur(0);
+    }
+
+    /* Entrada diagonal · z-swap a 30% (antes del overlap visual con phone) */
+    @keyframes dashSlideIn {
+      0% {
+        transform:translate3d(-50%, -50%, 0) translateX(200px) scale(0.58) rotate(6deg);
+        z-index:2;
+      }
+      30% { z-index:2; }
+      30.01% { z-index:5; }
+      100% {
+        transform:translate3d(-50%, -50%, 0) translateX(-30px) scale(1)    rotate(1deg);
+        z-index:5;
+      }
+    }
+
+    /* Browser-style title bar */
+    .dash-titlebar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding-bottom:10px;
+      margin-bottom:12px;
+      border-bottom:1px solid var(--c-surface);
+    }
+    .dash-traffic{display:flex;gap:5px;}
+    .dash-traffic span{width:9px;height:9px;border-radius:50%;display:inline-block;}
+    .dash-traffic span:nth-child(1){background:#FF5F57;}
+    .dash-traffic span:nth-child(2){background:#FEBC2E;}
+    .dash-traffic span:nth-child(3){background:#28C840;}
+    .dash-url{
+      flex:1;
+      background:var(--c-surface);
+      border-radius:6px;
+      padding:4px 10px;
+      font-size:9px;
+      color:var(--c-muted);
+      font-weight:500;
+      letter-spacing:0.2px;
+      text-align:center;
+    }
+
+    .dash-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:12px;
+    }
+    .dash-title{font-size:13px;font-weight:700;color:var(--c-text);line-height:1.2;}
+    .dash-subtitle{font-size:9px;font-weight:400;color:var(--c-muted);margin-top:2px;display:block;}
+    .live-pill{
+      background:var(--c-success-soft);
+      color:var(--c-success);
+      border:1px solid var(--c-success);
+      font-size:8px;
+      font-weight:700;
+      padding:3px 10px;
+      border-radius:20px;
+      display:inline-flex;
+      align-items:center;
+      letter-spacing:0.3px;
+      text-transform:uppercase;
+    }
+    .live-pill-dot{
+      width:6px;height:6px;border-radius:50%;background:var(--c-success);
+      display:inline-block;margin-right:5px;
+      animation:pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+
+    .metrics{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+      margin-bottom:18px;
+    }
+    .metric{
+      background:var(--c-surface);
+      border-radius:10px;
+      padding:10px 12px;
+      border:1px solid transparent;
+      position:relative;
+      overflow:hidden;
+      transition:background 300ms ease-out, border-color 300ms ease-out;
+    }
+    .metric.is-primary{
+      background:var(--c-xlight);
+      border-color:rgba(107,92,231,0.22);
+    }
+    .metric.is-flashing{
+      background:var(--c-highlight);
+      border-color:var(--c-mid);
+    }
+    .metric.is-flashing-green{
+      background:var(--c-success-soft);
+      border-color:var(--c-success);
+    }
+    .metric-icon{width:14px;height:14px;color:var(--c-muted);display:block;margin-bottom:5px;}
+    .metric.is-primary .metric-icon{color:var(--c-mid);}
+    .metric-label{font-size:8px;font-weight:500;color:var(--c-muted);margin-bottom:4px;line-height:1.2;letter-spacing:0.2px;}
+    .metric-value{
+      font-size:17px;font-weight:700;color:var(--c-text);line-height:1;
+      display:inline-block;font-variant-numeric:tabular-nums;
+      letter-spacing:-0.3px;
+    }
+    .metric.is-primary .metric-value{font-size:19px;color:var(--c-main);}
+
+    /* Number flip / slide animation */
+    .num-flip{
+      display:inline-flex;
+      vertical-align:bottom;
+      overflow:hidden;
+      height:1em;
+      line-height:1;
+    }
+    .num-flip span{
+      display:block;
+      transition:transform 600ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .num-flip.is-bumping span{
+      transform:translateY(-1em);
+    }
+
+    .panel-body{
+      display:grid;
+      grid-template-columns:1fr 200px;
+      gap:14px;
+      flex:1;
+      min-height:0;
+    }
+
+    /* Table */
+    .table-wrap{
+      display:flex;flex-direction:column;
+      background:#FFFFFF;
+      border:1px solid var(--c-surface);
+      border-radius:10px;
+      overflow:hidden;
+    }
+    .table-head{
+      display:grid;
+      grid-template-columns:1fr 50px 80px 90px;
+      background:var(--c-surface);
+      padding:8px 12px;
+      font-size:8px;
+      font-weight:700;
+      color:var(--c-muted);
+      letter-spacing:0.4px;
+      text-transform:uppercase;
+    }
+    .table-body{display:flex;flex-direction:column;}
+    .table-row{
+      display:grid;
+      grid-template-columns:1fr 50px 80px 90px;
+      padding:13px 12px;
+      align-items:center;
+      border-bottom:1px solid var(--c-surface);
+      font-size:11px;
+      color:var(--c-text);
+      transition:background 400ms ease-out, transform 400ms ease-out, box-shadow 400ms ease-out;
+      position:relative;
+    }
+    .table-row:last-child{border-bottom:none;}
+    .table-row.is-highlighted{
+      background:var(--c-highlight);
+      box-shadow:inset 3px 0 0 0 var(--c-mid);
+      transform:translateX(2px);
+    }
+    .table-row.is-fading{
+      background:#FFFFFF;
+      box-shadow:inset 0 0 0 0 transparent;
+      transform:translateX(0);
+      transition:background 700ms ease-out, transform 700ms ease-out, box-shadow 700ms ease-out;
+    }
+
+    .name-cell{display:flex;align-items:center;}
+    .avatar{
+      border-radius:50%;color:#FFFFFF;font-weight:700;
+      display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .avatar-table{width:24px;height:24px;font-size:8px;margin-right:9px;}
+    .name-text{font-weight:500;font-size:11px;}
+
+    .badge{
+      display:inline-block;font-size:8px;font-weight:700;
+      padding:3px 8px;border-radius:6px;border:1px solid transparent;
+      letter-spacing:0.3px;text-transform:uppercase;
+      transition:opacity 400ms ease-in-out, transform 400ms ease-out;
+    }
+    .badge.pendiente{
+      background:var(--c-error-soft);color:var(--c-error);
+      border-color:rgba(217,79,79,0.3);
+    }
+    .badge.suscrito{
+      background:var(--c-success-soft);color:var(--c-success);
+      border-color:rgba(34,164,89,0.3);
+    }
+    .badge-wrap{position:relative;display:inline-block;min-width:62px;min-height:18px;}
+    .badge-wrap .badge{position:absolute;top:0;left:0;}
+    .badge.is-out{opacity:0;transform:scale(0.6);}
+    .badge.is-in{opacity:1;transform:scale(1);}
+    .badge.is-hidden{opacity:0;transform:scale(0.6);}
+    .badge.is-shaking{animation:shake 350ms ease-in-out;}
+    @keyframes shake{
+      0%,100%{transform:translateX(0);}
+      20%{transform:translateX(-2px);}
+      40%{transform:translateX(2px);}
+      60%{transform:translateX(-2px);}
+      80%{transform:translateX(2px);}
+    }
+
+    /* Activity feed */
+    .feed{
+      display:flex;flex-direction:column;
+      background:#FFFFFF;
+      border:1px solid var(--c-surface);
+      border-radius:10px;
+      padding:12px;
+      gap:10px;
+      overflow:hidden;
+    }
+    .feed-title{
+      font-size:8px;font-weight:700;color:var(--c-muted);
+      text-transform:uppercase;letter-spacing:0.5px;
+    }
+    .feed-item{
+      display:flex;align-items:flex-start;gap:9px;
+      padding:10px 11px;
+      background:var(--c-surface);
+      border-radius:8px;
+      color:var(--c-text);
+    }
+    /* Estado escondido inicial: fuera del layout, no consume espacio */
+    .feed-item.is-incoming{display:none;}
+    /* Cuando aparece como nuevo: slide-down con highlight verde */
+    .feed-item.is-new{
+      background:var(--c-success-soft);
+      box-shadow:0 0 0 1px rgba(34,164,89,0.3);
+      animation:feedSlideIn 600ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes feedSlideIn{
+      0%{opacity:0;transform:translateY(-14px) scale(0.94);}
+      100%{opacity:1;transform:translateY(0) scale(1);}
+    }
+
+    .feed-dot{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--c-success);flex-shrink:0;margin-top:3px;
+    }
+    .feed-item.is-mid .feed-dot{background:var(--c-mid);}
+    .feed-item.is-alert .feed-dot{background:var(--c-error);}
+    .feed-text{flex:1;line-height:1.4;}
+    .feed-text strong{font-weight:700;color:var(--c-text);display:block;font-size:10px;margin-bottom:2px;}
+    .feed-text span{font-size:9px;color:var(--c-muted);}
+
+    /* CTA implícito: indica que hay más historial debajo del feed */
+    .feed-more{
+      text-align:center;
+      font-size:8px;
+      font-weight:600;
+      color:var(--c-muted);
+      padding:4px;
+      letter-spacing:0.4px;
+      text-transform:uppercase;
+      margin-top:2px;
+    }
+
+    /* ─── PHONE (front layer initially) ─── */
+    .phone{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:230px;
+      height:450px;
+      /* Idle (activo): ligeramente a la izquierda del centro, escalado a 1.05 */
+      transform:translate3d(-50%, -50%, 0) translateX(-50px) scale(1.05) rotate(-2deg);
+      transform-origin:center center;
+      z-index:5;
+      opacity:1;
+      filter:saturate(1) blur(0);
+      transition:filter 700ms var(--anim-easing);
+      will-change:transform, filter;
+    }
+    .mockup.is-dash-focus .phone{
+      animation:phoneSlideOut var(--anim-orbit-duration) var(--anim-easing) forwards;
+      filter:saturate(0.85) blur(1.4px);
+    }
+
+    /* Salida diagonal del celular · translateX -340 (no llega al borde) */
+    @keyframes phoneSlideOut {
+      0% {
+        transform:translate3d(-50%, -50%, 0) translateX(-50px)  scale(1.05) rotate(-2deg);
+        z-index:5;
+      }
+      50% { z-index:5; }
+      50.01% { z-index:2; }
+      100% {
+        transform:translate3d(-50%, -50%, 0) translateX(-340px) scale(0.58) rotate(-8deg);
+        z-index:2;
+      }
+    }
+
+    .phone-frame{
+      width:100%;height:100%;
+      background:#FFFFFF;
+      border-radius:34px;
+      box-shadow:var(--shadow-phone);
+      overflow:hidden;
+      position:relative;
+      transition:box-shadow 800ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mockup.is-dash-focus .phone-frame{
+      box-shadow:var(--shadow-phone-dim);
+    }
+    .phone-notch{
+      position:absolute;top:0;left:50%;
+      transform:translateX(-50%);
+      width:72px;height:18px;
+      background:rgba(45,37,96,0.85);
+      border-radius:0 0 14px 14px;
+      z-index:5;
+    }
+
+    .phone-screens{
+      position:absolute;
+      inset:6px;
+      border-radius:28px;
+      overflow:hidden;
+      background:#FCFCFE;
+    }
+
+    .phone-screen{
+      position:absolute;
+      inset:0;
+      padding:24px 14px 14px;
+      display:flex;flex-direction:column;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 400ms ease-in-out;
+    }
+    .phone-screen.is-active{opacity:1;pointer-events:auto;}
+
+    /* Status bar */
+    .status-bar{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:4px 8px 8px;
+    }
+    .status-time{font-size:9px;font-weight:700;color:var(--c-text);}
+    .status-icons{display:inline-flex;gap:4px;align-items:center;color:var(--c-text);}
+    .msi--bat{
+      width:18px;height:8px;border:1px solid currentColor;border-radius:2px;
+      padding:1px;position:relative;
+    }
+    .msi--bat::after{content:'';display:block;height:100%;width:80%;background:currentColor;border-radius:1px;}
+
+
+    /* SCREEN 1: subscription card */
+    .sub-greeting{font-size:10px;color:var(--c-muted);font-weight:500;margin-top:24px;margin-bottom:3px;padding:0 2px;}
+    .sub-student{font-size:15px;font-weight:700;color:var(--c-text);line-height:1.2;margin-bottom:3px;padding:0 2px;letter-spacing:-0.3px;}
+    .sub-course{font-size:9px;color:var(--c-muted);font-weight:500;margin-bottom:16px;padding:0 2px;}
+
+    .sub-card{
+      background:linear-gradient(140deg, var(--c-main) 0%, var(--c-mid) 100%);
+      border-radius:14px;
+      padding:14px;
+      color:#FFFFFF;
+      box-shadow:0 8px 20px rgba(74,60,174,0.28);
+      position:relative;
+      overflow:hidden;
+      margin-bottom:12px;
+    }
+    .sub-card::after{
+      content:"";position:absolute;
+      width:100px;height:100px;border-radius:50%;
+      background:rgba(255,255,255,0.08);
+      top:-30px;right:-30px;
+    }
+    .sub-card-label{font-size:8px;font-weight:600;opacity:0.85;letter-spacing:0.4px;text-transform:uppercase;margin-bottom:4px;display:block;position:relative;z-index:1;}
+    .sub-card-amount{font-size:26px;font-weight:800;line-height:1;letter-spacing:-0.5px;margin-bottom:6px;display:block;position:relative;z-index:1;}
+    .sub-card-period{font-size:9px;opacity:0.9;display:block;position:relative;z-index:1;}
+    .sub-card-meta{
+      display:flex;justify-content:space-between;
+      margin-top:10px;padding-top:10px;
+      border-top:1px solid rgba(255,255,255,0.18);
+      font-size:8px;
+      position:relative;z-index:1;
+    }
+    .sub-card-meta span{opacity:0.8;}
+    .sub-card-meta strong{font-weight:600;}
+
+    .pay-btn-wrap{
+      position:relative;margin-top:auto;
+    }
+    .pay-btn{
+      width:100%;height:38px;
+      background:linear-gradient(135deg, var(--c-mid), var(--c-main));
+      color:#FFFFFF;border:none;border-radius:10px;
+      font-family:'Poppins',sans-serif;font-size:10px;font-weight:700;
+      display:flex;align-items:center;justify-content:center;gap:6px;
+      box-shadow:0 6px 16px rgba(107,92,231,0.4);
+      cursor:default;
+      letter-spacing:0.3px;
+      position:relative;overflow:hidden;
+      transition:transform 200ms cubic-bezier(0.34,1.56,0.64,1),
+                 box-shadow 250ms ease-out,
+                 background 250ms ease-out;
+    }
+    .pay-btn.is-hovering{
+      transform:translateY(-1px);
+      box-shadow:0 10px 22px rgba(107,92,231,0.5);
+    }
+    .pay-btn.is-pressed{
+      transform:scale(0.93) translateY(0);
+      box-shadow:0 3px 8px rgba(107,92,231,0.45);
+    }
+    .pay-btn.is-loading{
+      background:linear-gradient(135deg, var(--c-main), var(--c-deep));
+      box-shadow:0 4px 10px rgba(45,37,96,0.35);
+    }
+    /* Pulse around button waiting for tap */
+    .pay-btn-pulse{
+      position:absolute;inset:0;border-radius:10px;
+      pointer-events:none;
+      box-shadow:0 0 0 0 rgba(107,92,231,0.5);
+      animation:btnPulse 2s ease-out infinite;
+    }
+    @keyframes btnPulse{
+      0%{box-shadow:0 0 0 0 rgba(107,92,231,0.5);}
+      70%{box-shadow:0 0 0 14px rgba(107,92,231,0);}
+      100%{box-shadow:0 0 0 0 rgba(107,92,231,0);}
+    }
+    .pay-btn-wrap.is-hidden-pulse .pay-btn-pulse{display:none;}
+
+    .spinner{width:14px;height:14px;animation:spin 700ms linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* Tap ripple (finger) */
+    .tap-finger{
+      position:absolute;
+      left:50%;top:50%;
+      width:48px;height:48px;
+      border-radius:50%;
+      background:rgba(107,92,231,0.35);
+      transform:translate(-50%,-50%) scale(0);
+      pointer-events:none;
+      z-index:10;
+      opacity:0;
+    }
+    .tap-finger.is-tapping{
+      animation:tapRipple 600ms ease-out;
+    }
+    @keyframes tapRipple{
+      0%{transform:translate(-50%,-50%) scale(0);opacity:0.9;background:rgba(107,92,231,0.55);}
+      60%{opacity:0.5;}
+      100%{transform:translate(-50%,-50%) scale(2.6);opacity:0;background:rgba(107,92,231,0);}
+    }
+
+    /* SCREEN 2: success */
+    .scr-success{
+      align-items:center;justify-content:center;
+      text-align:center;
+      gap:0;
+      background:linear-gradient(180deg, #FCFCFE 0%, #F5F2FE 100%);
+    }
+    .check-burst{
+      position:relative;
+      width:88px;height:88px;
+      margin-bottom:18px;
+    }
+    .check-burst-ring{
+      position:absolute;inset:0;border-radius:50%;
+      border:2px solid var(--c-success);
+      opacity:0;
+      transform:scale(0.4);
+    }
+    .scr-success.is-playing .check-burst-ring{
+      animation:burstRing 900ms ease-out 100ms forwards;
+    }
+    @keyframes burstRing{
+      0%{opacity:0.7;transform:scale(0.4);}
+      100%{opacity:0;transform:scale(2.2);}
+    }
+    .check-circle{
+      position:absolute;inset:14px;
+      border-radius:50%;
+      background:linear-gradient(135deg, #22A459, #198344);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 8px 24px rgba(34,164,89,0.45);
+      transform:scale(0);
+    }
+    .scr-success.is-playing .check-circle{
+      animation:popIn 450ms cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes popIn{
+      0%{transform:scale(0) rotate(-90deg);}
+      100%{transform:scale(1) rotate(0deg);}
+    }
+    .success-title{
+      font-size:16px;font-weight:800;color:var(--c-text);
+      margin-bottom:4px;
+      opacity:0;transform:translateY(8px);
+    }
+    .success-sub{
+      font-size:10px;color:var(--c-muted);font-weight:500;
+      opacity:0;transform:translateY(8px);
+      line-height:1.4;padding:0 12px;
+    }
+    .success-amount-tag{
+      margin-top:14px;
+      padding:7px 14px;
+      background:#FFFFFF;
+      border:1px solid var(--c-success);
+      border-radius:20px;
+      font-size:11px;font-weight:700;color:var(--c-success);
+      opacity:0;transform:translateY(8px);
+      box-shadow:0 4px 12px rgba(34,164,89,0.15);
+    }
+    .scr-success.is-playing .success-title{
+      animation:fadeUp 400ms ease-out 350ms forwards;
+    }
+    .scr-success.is-playing .success-sub{
+      animation:fadeUp 400ms ease-out 500ms forwards;
+    }
+    .scr-success.is-playing .success-amount-tag{
+      animation:fadeUp 400ms ease-out 650ms forwards;
+    }
+    @keyframes fadeUp{
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    /* Confetti */
+    .confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+    .confetti span{
+      position:absolute;width:6px;height:10px;
+      top:50%;left:50%;
+      opacity:0;
+      border-radius:1px;
+    }
+    .scr-success.is-playing .confetti span{
+      animation:confettiBurst 1.2s ease-out 200ms forwards;
+    }
+    @keyframes confettiBurst{
+      0%{opacity:1;transform:translate(-50%,-50%) rotate(0);}
+      100%{opacity:0;transform:translate(var(--tx),var(--ty)) rotate(var(--r));}
+    }
+
+    /* SCREEN 3: receipt · rediseñado para ser más denso y balanceado */
+    .scr-receipt{padding:24px 14px 14px;}
+    .receipt-head{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .receipt-title-h{font-size:11px;font-weight:700;color:var(--c-text);}
+    .receipt-share{
+      display:inline-flex;align-items:center;gap:4px;
+      font-size:9px;font-weight:600;color:var(--c-mid);
+    }
+    .receipt-share svg{width:11px;height:11px;}
+
+    /* Stamp row: solo pill verde de aprobado · centrada horizontalmente */
+    .receipt-stamp{
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:12px;
+    }
+    .receipt-stamp-pill{
+      display:inline-flex;align-items:center;gap:5px;
+      padding:4px 10px 4px 7px;
+      background:var(--c-success-soft);
+      border:1px solid rgba(34,164,89,0.22);
+      border-radius:99px;
+      font-size:9px;font-weight:700;color:var(--c-success);
+      text-transform:uppercase;letter-spacing:0.5px;
+      line-height:1;
+    }
+    .receipt-stamp-pill svg{
+      width:10px;height:10px;flex-shrink:0;
+    }
+
+    /* Lista de detalles con iconos */
+    .receipt-rows{
+      display:flex;flex-direction:column;gap:9px;
+      margin-top:14px;padding-top:14px;
+      border-top:1px dashed var(--c-border);
+    }
+    .receipt-row{
+      display:flex;align-items:center;gap:9px;
+    }
+    .receipt-row-icon{
+      width:24px;height:24px;border-radius:7px;
+      background:var(--c-xlight);
+      color:var(--c-mid);
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+    }
+    .receipt-row-icon svg{width:13px;height:13px;}
+    .receipt-row-text{
+      display:flex;flex-direction:column;flex:1;
+      line-height:1.2;min-width:0;
+    }
+    .receipt-row-text span{
+      font-size:8px;font-weight:500;color:var(--c-muted);
+      letter-spacing:0.3px;text-transform:uppercase;
+    }
+    .receipt-row-text strong{
+      font-size:10px;font-weight:700;color:var(--c-text);
+      margin-top:1px;
+    }
+
+    .receipt-card{
+      background:#FFFFFF;
+      border:1px solid var(--c-surface);
+      border-radius:12px;
+      padding:14px;
+      box-shadow:0 4px 14px rgba(74,60,174,0.08);
+      margin-bottom:10px;
+    }
+    .receipt-amount{
+      font-size:28px;font-weight:700;color:var(--c-text);
+      letter-spacing:-0.6px;line-height:1;margin-bottom:3px;
+      text-align:center;
+    }
+    .receipt-label{
+      font-size:9px;color:var(--c-muted);font-weight:500;
+      text-align:center;
+    }
+
+    /* Cascade reveal de las filas del comprobante · stagger fade-up */
+    .scr-receipt .receipt-stamp,
+    .scr-receipt .receipt-amount,
+    .scr-receipt .receipt-label,
+    .scr-receipt .receipt-rows .receipt-row,
+    .scr-receipt .receipt-next{
+      opacity:0;
+      transform:translateY(6px);
+    }
+    .scr-receipt.is-revealed .receipt-stamp{ animation:receiptReveal 380ms ease-out 0ms forwards; }
+    .scr-receipt.is-revealed .receipt-amount{ animation:receiptReveal 380ms ease-out 80ms forwards; }
+    .scr-receipt.is-revealed .receipt-label{ animation:receiptReveal 380ms ease-out 150ms forwards; }
+    .scr-receipt.is-revealed .receipt-rows .receipt-row:nth-of-type(1){ animation:receiptReveal 380ms ease-out 240ms forwards; }
+    .scr-receipt.is-revealed .receipt-rows .receipt-row:nth-of-type(2){ animation:receiptReveal 380ms ease-out 310ms forwards; }
+    .scr-receipt.is-revealed .receipt-rows .receipt-row:nth-of-type(3){ animation:receiptReveal 380ms ease-out 380ms forwards; }
+    .scr-receipt.is-revealed .receipt-next{ animation:receiptReveal 380ms ease-out 480ms forwards; }
+    @keyframes receiptReveal{
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    /* Pulse "loud" del live dot cuando llega actividad nueva al feed */
+    .live-pill-dot.is-pulsing-loud{
+      animation:pulseLoud 700ms ease-out 2 alternate;
+    }
+    @keyframes pulseLoud{
+      0%   { transform:scale(1);   box-shadow:0 0 0 0   rgba(34,164,89,0.6); }
+      100% { transform:scale(1.5); box-shadow:0 0 0 8px rgba(34,164,89,0);   }
+    }
+
+    /* Pill "Próximo cargo" simplificada · less is more */
+    .receipt-next{
+      margin-top:14px;
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;
+      background:#FAF9FE;
+      border-radius:10px;
+    }
+    .receipt-next-icon{
+      width:22px;height:22px;
+      color:var(--c-mid);
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+    }
+    .receipt-next-icon svg{width:18px;height:18px;}
+    .receipt-next-body{
+      display:flex;flex-direction:column;line-height:1.3;flex:1;min-width:0;
+    }
+    .receipt-next-date{
+      font-size:10px;font-weight:700;color:var(--c-text);
+      letter-spacing:-0.1px;
+    }
+    .receipt-next-auto-text{
+      font-size:8px;font-weight:500;color:var(--c-muted);
+    }
+
+    .col-curso{width:50px;}
+  </style>
+</head>
+<body>
+
+  <div class="hidpi-wrap">
+  <div class="mockup" id="mockup">
+    <div class="ambient-glow"></div>
+    <div class="connector-pulse" id="connectorPulse"></div>
+
+    <!-- ═════ DASHBOARD (back) ═════ -->
+    <div class="dashboard" id="dashboard">
+      <div class="dash-titlebar">
+        <div class="dash-traffic"><span></span><span></span><span></span></div>
+        <div class="dash-url">app.tapin.cl / comedor / panel</div>
+      </div>
+
+      <div class="dash-header">
+        <div>
+          <span class="dash-title">Panel Comedor</span>
+          <span class="dash-subtitle">Colegio San Francisco · Marzo 2026</span>
+        </div>
+        <span class="live-pill"><span class="live-pill-dot"></span>En vivo</span>
+      </div>
+
+      <div class="metrics">
+        <div class="metric is-primary" id="metricSubsCard">
+          <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+          </svg>
+          <div class="metric-label">Suscripciones activas</div>
+          <div class="metric-value" id="metricSubs">247</div>
+        </div>
+        <div class="metric">
+          <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 19h18"/>
+            <path d="M4 19c0-5 3.6-9 8-9s8 4 8 9"/>
+            <path d="M12 10V6.5"/>
+            <circle cx="12" cy="5" r="1.2" fill="currentColor"/>
+          </svg>
+          <div class="metric-label">Consumos hoy</div>
+          <div class="metric-value">187</div>
+        </div>
+        <div class="metric" id="metricReconciled">
+          <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M8 12.5l2.5 2.5L16 9.5"/>
+          </svg>
+          <div class="metric-label">Conciliado mes</div>
+          <div class="metric-value" id="metricRec">$4.250.000</div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <!-- TABLE -->
+        <div class="table-wrap">
+          <div class="table-head">
+            <span>Nombre</span>
+            <span>Curso</span>
+            <span>Monto</span>
+            <span>Estado</span>
+          </div>
+          <div class="table-body">
+            <div class="table-row" id="rowJuan">
+              <div class="name-cell"><span class="avatar avatar-table" style="background:#6B5CE7;">JC</span><span class="name-text">Juan Carrasco</span></div>
+              <span>5°B</span>
+              <span>$108.000</span>
+              <span>
+                <div class="badge-wrap">
+                  <span class="badge pendiente" id="badgePendiente">Pendiente</span>
+                  <span class="badge suscrito is-hidden" id="badgeSuscrito">Suscrito</span>
+                </div>
+              </span>
+            </div>
+            <div class="table-row">
+              <div class="name-cell"><span class="avatar avatar-table" style="background:#4A3CAE;">SM</span><span class="name-text">Sofía Morales</span></div>
+              <span>3°A</span>
+              <span>$108.000</span>
+              <span><span class="badge suscrito">Suscrito</span></span>
+            </div>
+            <div class="table-row">
+              <div class="name-cell"><span class="avatar avatar-table" style="background:#9B8EF0;">DF</span><span class="name-text">Diego Fuentes</span></div>
+              <span>6°C</span>
+              <span>$108.000</span>
+              <span><span class="badge suscrito">Suscrito</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FEED · ordenado por recencia (más nuevo arriba) -->
+        <div class="feed">
+          <div class="feed-title">Actividad reciente</div>
+
+          <!-- Juan: aparece primero al pagar; inicialmente display:none -->
+          <div class="feed-item is-incoming" id="feedItemNew">
+            <span class="feed-dot"></span>
+            <div class="feed-text">
+              <strong>Juan Carrasco · 5°B</strong>
+              <span>Pago $108.000 · ahora</span>
+            </div>
+          </div>
+
+          <div class="feed-item is-mid">
+            <span class="feed-dot"></span>
+            <div class="feed-text">
+              <strong>Sofía Morales · 3°A</strong>
+              <span>Recarga $20.000 · 4 min</span>
+            </div>
+          </div>
+
+          <div class="feed-item is-alert">
+            <span class="feed-dot"></span>
+            <div class="feed-text">
+              <strong>Diego Fuentes · 6°C</strong>
+              <span>Saldo bajo · 8 min</span>
+            </div>
+          </div>
+
+          <div class="feed-more">+12 más esta hora</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════ PHONE (front) ═════ -->
+    <div class="phone" id="phone">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+
+        <div class="phone-screens">
+
+          <!-- SCREEN 1: subscription / pay -->
+          <div class="phone-screen is-active" id="screenPay">
+            <div class="status-bar">
+              <span class="status-time">9:41</span>
+              <span class="status-icons">
+                <span class="msi msi--bat"></span>
+              </span>
+            </div>
+
+            <div class="sub-greeting">Hola Patricia,</div>
+            <div class="sub-student">Juan Carrasco</div>
+            <div class="sub-course">5° Básico B · Colegio San Francisco</div>
+
+            <div class="sub-card">
+              <span class="sub-card-label">Suscripción mensual</span>
+              <span class="sub-card-amount">$108.000</span>
+              <span class="sub-card-period">Marzo · 22 días hábiles</span>
+              <div class="sub-card-meta">
+                <span>Almuerzo + colación</span>
+                <strong>$4.909 / día</strong>
+              </div>
+            </div>
+
+            <div class="pay-btn-wrap" id="payBtnWrap">
+              <span class="pay-btn-pulse"></span>
+              <button class="pay-btn" id="payBtn">
+                <span id="payBtnText">Pagar ahora · $108.000</span>
+              </button>
+              <span class="tap-finger" id="tapFinger"></span>
+            </div>
+          </div>
+
+          <!-- SCREEN 2: success -->
+          <div class="phone-screen scr-success" id="screenSuccess">
+            <div class="check-burst">
+              <span class="check-burst-ring"></span>
+              <div class="check-circle">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12.5l4.5 4.5L19 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="success-title">¡Pago exitoso!</div>
+            <div class="success-sub">Suscripción de Marzo activa</div>
+            <div class="success-amount-tag">$108.000 · Marzo 2026</div>
+
+            <div class="confetti">
+              <span style="background:#6B5CE7;--tx:-60px;--ty:-90px;--r:120deg;"></span>
+              <span style="background:#22A459;--tx:70px;--ty:-80px;--r:-100deg;"></span>
+              <span style="background:#9B8EF0;--tx:-90px;--ty:40px;--r:200deg;"></span>
+              <span style="background:#4A3CAE;--tx:80px;--ty:50px;--r:-180deg;"></span>
+              <span style="background:#6B5CE7;--tx:-30px;--ty:90px;--r:80deg;"></span>
+              <span style="background:#22A459;--tx:50px;--ty:90px;--r:-60deg;"></span>
+              <span style="background:#9B8EF0;--tx:0px;--ty:-100px;--r:140deg;"></span>
+              <span style="background:#4A3CAE;--tx:-100px;--ty:-10px;--r:-220deg;"></span>
+            </div>
+          </div>
+
+          <!-- SCREEN 3: receipt (simplificado) -->
+          <div class="phone-screen scr-receipt" id="screenReceipt">
+            <div class="status-bar">
+              <span class="status-time">9:41</span>
+              <span class="status-icons">
+                <span class="msi msi--bat"></span>
+              </span>
+            </div>
+
+            <div class="receipt-head">
+              <span class="receipt-title-h">Comprobante</span>
+              <span class="receipt-share">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <polyline points="16 6 12 2 8 6"/>
+                  <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                Compartir
+              </span>
+            </div>
+
+            <div class="receipt-card">
+              <div class="receipt-stamp">
+                <span class="receipt-stamp-pill">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12.5l4.5 4.5L19 7" stroke="#22A459" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Pago aprobado
+                </span>
+              </div>
+
+              <div class="receipt-amount">$108.000</div>
+              <div class="receipt-label">Suscripción mensual de Marzo</div>
+
+              <div class="receipt-rows">
+                <div class="receipt-row">
+                  <div class="receipt-row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="8" r="4"/>
+                      <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+                    </svg>
+                  </div>
+                  <div class="receipt-row-text">
+                    <span>Estudiante</span>
+                    <strong>Juan Carrasco · 5°B</strong>
+                  </div>
+                </div>
+                <div class="receipt-row">
+                  <div class="receipt-row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="5" width="18" height="16" rx="2"/>
+                      <path d="M3 9h18"/>
+                      <path d="M8 3v4M16 3v4"/>
+                    </svg>
+                  </div>
+                  <div class="receipt-row-text">
+                    <span>Período</span>
+                    <strong>1 al 31 de Marzo</strong>
+                  </div>
+                </div>
+                <div class="receipt-row">
+                  <div class="receipt-row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="6" width="20" height="13" rx="2"/>
+                      <path d="M2 11h20"/>
+                      <path d="M7 16h3"/>
+                    </svg>
+                  </div>
+                  <div class="receipt-row-text">
+                    <span>Método</span>
+                    <strong>Tarjeta •••• 4821</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="receipt-next">
+              <div class="receipt-next-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/>
+                  <path d="M21 4v4h-4"/>
+                  <path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/>
+                  <path d="M3 20v-4h4"/>
+                </svg>
+              </div>
+              <div class="receipt-next-body">
+                <span class="receipt-next-date">Próximo cargo · 28 Abril</span>
+                <span class="receipt-next-auto-text">Renovación automática</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+<script>
+(function(){
+  const mockup       = document.getElementById('mockup');
+  const phone        = document.getElementById('phone');
+  const dashboard    = document.getElementById('dashboard');
+
+  const screenPay     = document.getElementById('screenPay');
+  const screenSuccess = document.getElementById('screenSuccess');
+  const screenReceipt = document.getElementById('screenReceipt');
+
+  const payBtn       = document.getElementById('payBtn');
+  const payBtnText   = document.getElementById('payBtnText');
+  const payBtnWrap   = document.getElementById('payBtnWrap');
+  const tapFinger    = document.getElementById('tapFinger');
+
+  const rowJuan       = document.getElementById('rowJuan');
+  const badgePend     = document.getElementById('badgePendiente');
+  const badgeSusc     = document.getElementById('badgeSuscrito');
+  const metricSubs    = document.getElementById('metricSubs');
+  const metricSubsCard= document.getElementById('metricSubsCard');
+  const metricRec     = document.getElementById('metricRec');
+  const metricRecCard = document.getElementById('metricReconciled');
+  const feedItemNew   = document.getElementById('feedItemNew');
+
+  const SPINNER_SVG = '<svg class="spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="rgba(255,255,255,0.28)" stroke-width="3"/><path d="M21 12a9 9 0 0 0-9-9" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/></svg>';
+
+  /* Refs adicionales para nuevas animaciones */
+  const connectorPulse = document.getElementById('connectorPulse');
+  const liveDot        = document.querySelector('.live-pill-dot');
+
+  const timers = [];
+  function schedule(fn, delay){ timers.push(setTimeout(fn, delay)); }
+  function clearAllTimers(){
+    timers.forEach(clearTimeout);
+    timers.length = 0;
+  }
+
+  function setActiveScreen(el){
+    [screenPay, screenSuccess, screenReceipt].forEach(s => s.classList.remove('is-active'));
+    el.classList.add('is-active');
+  }
+
+  function resetState(){
+    clearAllTimers();
+
+    setActiveScreen(screenPay);
+
+    payBtn.classList.remove('is-pressed','is-loading','is-hovering');
+    payBtnText.innerHTML = '';
+    payBtnText.textContent = 'Pagar ahora · $108.000';
+    payBtnWrap.classList.remove('is-hidden-pulse');
+    tapFinger.classList.remove('is-tapping');
+
+    screenSuccess.classList.remove('is-playing');
+    screenReceipt.classList.remove('is-revealed');
+
+    mockup.classList.remove('is-dash-focus');
+
+    if(connectorPulse) connectorPulse.classList.remove('is-firing');
+    if(liveDot) liveDot.classList.remove('is-pulsing-loud');
+
+    rowJuan.classList.remove('is-highlighted','is-fading');
+    badgePend.classList.remove('is-out','is-shaking');
+    badgePend.classList.remove('is-hidden');
+    badgeSusc.classList.remove('is-in');
+    badgeSusc.classList.add('is-hidden');
+
+    metricSubsCard.classList.remove('is-flashing');
+    metricRecCard.classList.remove('is-flashing-green');
+    metricSubs.textContent = '247';
+    metricRec.textContent  = '$4.250.000';
+
+    feedItemNew.classList.remove('is-new');
+    feedItemNew.classList.add('is-incoming');
+  }
+
+  function animateNumber(el, from, to, duration){
+    const start = performance.now();
+    const isCurrency = String(from).startsWith('$');
+    const fromNum = parseInt(String(from).replace(/[^0-9]/g,''),10);
+    const toNum   = parseInt(String(to).replace(/[^0-9]/g,''),10);
+    function tick(now){
+      const t = Math.min(1, (now-start)/duration);
+      const eased = 1 - Math.pow(1-t, 3); // ease-out cubic
+      const val = Math.round(fromNum + (toNum-fromNum)*eased);
+      el.textContent = isCurrency
+        ? '$' + val.toLocaleString('es-CL')
+        : val.toString();
+      if(t<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function runLoop(){
+    resetState();
+    mockup.classList.remove('is-resetting');
+
+    /* ───── STAGE A: PHONE FOCUS (0 → 10.4s) ───── */
+
+    // 1.2s: button hover state to draw attention
+    schedule(()=>{
+      payBtn.classList.add('is-hovering');
+    }, 1200);
+
+    // 1.9s: tap ripple + press
+    schedule(()=>{
+      tapFinger.classList.add('is-tapping');
+      payBtn.classList.remove('is-hovering');
+      payBtn.classList.add('is-pressed');
+      payBtnWrap.classList.add('is-hidden-pulse');
+    }, 1900);
+
+    // 2.15s: release → loading
+    schedule(()=>{
+      payBtn.classList.remove('is-pressed');
+      payBtn.classList.add('is-loading');
+      payBtnText.innerHTML = SPINNER_SVG + '<span>Procesando pago...</span>';
+    }, 2150);
+
+    // 2.5s: remove ripple class so it can replay later
+    schedule(()=>{ tapFinger.classList.remove('is-tapping'); }, 2500);
+
+    // 4.0s: success screen (2.7s de duración)
+    schedule(()=>{
+      setActiveScreen(screenSuccess);
+      void screenSuccess.offsetWidth;
+      screenSuccess.classList.add('is-playing');
+    }, 4000);
+
+    // 4.4s: connector pulse · viaja del celular hacia el dashboard
+    // (refuerza que el pago se está propagando al admin)
+    schedule(()=>{
+      if(connectorPulse){
+        connectorPulse.classList.remove('is-firing');
+        void connectorPulse.offsetWidth;
+        connectorPulse.classList.add('is-firing');
+      }
+    }, 4400);
+
+    // 6.7s: receipt screen con cascade reveal de filas
+    schedule(()=>{
+      setActiveScreen(screenReceipt);
+      screenReceipt.classList.remove('is-revealed');
+      void screenReceipt.offsetWidth;
+      screenReceipt.classList.add('is-revealed');
+    }, 6700);
+
+    /* ───── STAGE B: TRANSITION (9.9s · receipt acortado 0.5s) ───── */
+    schedule(()=>{
+      mockup.classList.add('is-dash-focus');
+    }, 9900);
+
+    /* ───── STAGE C: DASHBOARD REACTS (10.9 → 17.1s) ───── */
+
+    // 10.9s: new feed entry appears at top + pulse loud del live dot
+    schedule(()=>{
+      feedItemNew.classList.remove('is-incoming');
+      void feedItemNew.offsetWidth;
+      feedItemNew.classList.add('is-new');
+      if(liveDot){
+        liveDot.classList.remove('is-pulsing-loud');
+        void liveDot.offsetWidth;
+        liveDot.classList.add('is-pulsing-loud');
+      }
+    }, 10900);
+    schedule(()=>{
+      if(liveDot) liveDot.classList.remove('is-pulsing-loud');
+    }, 12400);
+
+    // 11.7s: highlight Juan's row
+    schedule(()=>{
+      rowJuan.classList.add('is-highlighted');
+    }, 11700);
+
+    // 12.2s: badge shake
+    schedule(()=>{
+      badgePend.classList.add('is-shaking');
+    }, 12200);
+
+    // 12.6s: badge swap out → in
+    schedule(()=>{
+      badgePend.classList.remove('is-shaking');
+      badgePend.classList.add('is-out');
+    }, 12600);
+    schedule(()=>{
+      badgePend.classList.add('is-hidden');
+      badgeSusc.classList.remove('is-hidden');
+      void badgeSusc.offsetWidth;
+      badgeSusc.classList.add('is-in');
+    }, 12900);
+
+    // 13.5s: highlight fades back
+    schedule(()=>{
+      rowJuan.classList.remove('is-highlighted');
+      rowJuan.classList.add('is-fading');
+    }, 13500);
+
+    // 14.0s: Suscripciones counter 247 → 248 with flash
+    schedule(()=>{
+      metricSubsCard.classList.add('is-flashing');
+      animateNumber(metricSubs, '247', '248', 800);
+    }, 14000);
+    schedule(()=>{
+      metricSubsCard.classList.remove('is-flashing');
+    }, 15300);
+
+    // 15.5s: Conciliado counter +$108.000 with green flash
+    schedule(()=>{
+      metricRecCard.classList.add('is-flashing-green');
+      animateNumber(metricRec, '$4.250.000', '$4.358.000', 1000);
+    }, 15500);
+    schedule(()=>{
+      metricRecCard.classList.remove('is-flashing-green');
+    }, 17100);
+
+    /* ───── STAGE D: RESET (17.6 → 18.3s) · ciclo total mucho más ágil ─────
+       Después del último counter (conciliado fin = 17.1s) solo damos 0.5s
+       de breathing room antes del fade-out · evita "tiempo muerto" largo */
+    schedule(()=>{
+      mockup.classList.add('is-resetting');
+    }, 17600);
+    schedule(()=>{
+      runLoop();
+    }, 18300);
+  }
+
+  /* Pausa el loop cuando el mockup no está visible en viewport
+     (en parent page, el iframe está fuera de vista) o cuando la tab
+     está oculta. Ahorra CPU/batería en mobile. */
+  let isVisible = true;
+  let loopActive = false;
+
+  function startLoop(){
+    if(loopActive) return;
+    loopActive = true;
+    runLoop();
+  }
+  function stopLoop(){
+    loopActive = false;
+    clearAllTimers();
+  }
+
+  /* Intersection: detecta cuando el mockup entra/sale del viewport.
+     En contexto iframe, el viewport del iframe siempre tiene el mockup
+     visible — pero el browser pausa rAF/timeouts en iframes fuera de
+     vista (throttling automático en Chrome/Firefox). Este observer
+     refuerza ese comportamiento en navegadores que no throttlean. */
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        isVisible = e.isIntersecting;
+        if(isVisible){ startLoop(); }
+        else { stopLoop(); }
+      });
+    }, { threshold: 0.05 });
+    io.observe(mockup);
+  }
+
+  /* Pausa cuando la tab está oculta */
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden){ stopLoop(); }
+    else if(isVisible){ startLoop(); }
+  });
+
+  /* PostMessage del parent · arranque fresh al cambiar de producto */
+  window.addEventListener('message', (e) => {
+    if(!e.data || typeof e.data.type !== 'string') return;
+    if(e.data.type === 'mockup-start'){
+      stopLoop();
+      startLoop();
+    } else if(e.data.type === 'mockup-stop'){
+      stopLoop();
+    }
+  });
+
+  /* Arranque inicial sólo si NO está embebido · cuando se embebe, el parent
+     controla el inicio vía postMessage para sincronizar con el cambio de tab */
+  const isEmbedded = (window.parent !== window);
+  if(!isEmbedded){
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(startLoop);
+    } else {
+      window.addEventListener('load', startLoop);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>

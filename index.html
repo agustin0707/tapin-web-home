@@ -1,0 +1,1656 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- R2.4 · Tinte de la barra de estado del navegador (móvil) = tono claro
+       del hero, para que el área de arriba (hora/batería/wifi) se vea como
+       continuación del hero. NO afecta el overscroll inferior (ese lo pinta
+       el fondo oscuro del body, que se mantiene). -->
+  <meta name="theme-color" content="#F2F1F8" />
+  <title>Tap In — La plataforma de la gestión escolar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=20260604d" />
+  <link rel="stylesheet" href="css/prodv6.css?v=20260604d" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════════════ -->
+  <div class="nav-shield" aria-hidden="true"></div>
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <!-- Capas extra para glassmorphism más fuerte (sheen + grain) -->
+      <span class="nav-glass-sheen" aria-hidden="true"></span>
+      <span class="nav-glass-grain" aria-hidden="true"></span>
+
+      <a href="#" class="nav-logo" aria-label="Tap In — inicio">
+        <span class="nav-wordmark" role="img" aria-label="tap in"></span>
+      </a>
+      <ul class="nav-links">
+        <li class="nav-li nav-li--has-dd">
+          <button type="button" class="nav-link nav-link--toggle" aria-haspopup="true" aria-expanded="false" id="navSolucionesTrigger">
+            <span>Soluciones</span>
+            <svg class="nav-chev" width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="nav-dropdown" role="menu" aria-labelledby="navSolucionesTrigger">
+            <a class="nav-dd-item" href="comedor-escolar.html" role="menuitem">Comedor Escolar</a>
+            <a class="nav-dd-item" href="centro-de-padres.html" role="menuitem">Centro de Padres</a>
+            <a class="nav-dd-item" href="gestion-de-proveedores.html" role="menuitem">Gestión de Proveedores</a>
+            <a class="nav-dd-item" href="ligas-y-talleres.html" role="menuitem">Talleres y Ligas</a>
+          </div>
+        </li>
+        <li class="nav-li"><a href="#colegios" class="nav-link">Comunidad</a></li>
+        <li class="nav-li nav-li--divider" aria-hidden="true"></li>
+        <li class="nav-li nav-li--empresa"><a href="empresa.html" class="nav-link">Empresa</a></li>
+        <li class="btn-nav-mobile-wrap"><a href="#contacto" class="btn-nav-mobile">Agenda una demo</a></li>
+      </ul>
+      <!-- Grupo CTA · [Ingresar ▾] · [Agenda demo]
+           "Ingresar" usa exactamente las mismas clases que el dropdown
+           "Soluciones" (.nav-li--has-dd / .nav-link--toggle / .nav-dropdown / .nav-dd-item)
+           para que sea idéntico gráficamente y en comportamiento. Solo se
+           sobrescribe la posición del .nav-dropdown para anclarse a la derecha. -->
+      <div class="nav-cta-group">
+        <div class="nav-li nav-li--has-dd nav-cta-ingresar">
+          <button type="button" class="nav-link nav-link--toggle" id="navIngresarTrigger" aria-haspopup="true" aria-expanded="false">
+            <span>Ingresar</span>
+            <svg class="nav-chev" width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="nav-dropdown" role="menu" aria-labelledby="navIngresarTrigger">
+            <a class="nav-dd-item" href="https://colegios.tapin.cl/admin/login" target="_blank" rel="noopener" role="menuitem">Portal Administrativo</a>
+            <a class="nav-dd-item" href="https://colegios.tapin.cl/" target="_blank" rel="noopener" role="menuitem">Ingresa como Apoderado</a>
+          </div>
+        </div>
+        <a href="#contacto" class="btn-nav">
+          <span>Agenda una demo</span>
+          <svg class="btn-nav-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO · LIGHT (v3 · cometa-style)
+  ════════════════════════════════════════════ -->
+  <section class="hero hero--light" id="inicio">
+    <div class="hero-light-bg" aria-hidden="true">
+      <div class="hero-light-dots"></div>
+      <div class="hero-light-glow hero-light-glow--1"></div>
+      <div class="hero-light-glow hero-light-glow--2"></div>
+    </div>
+
+    <!-- ── Floating mockups · realistic UI + animations ── -->
+
+    <!-- TL · Casino dashboard (desktop) — KPIs + último pedido (chart removido) -->
+    <div class="hero-mock hero-mock--tl" aria-hidden="true">
+      <div class="mock-window mock-window--bare">
+        <div class="mock-body mock-casino">
+          <div class="mock-app-bar">
+            <div class="mock-app-titles">
+              <strong>Hola de nuevo</strong>
+              <span>Operación del día · en vivo</span>
+            </div>
+            <span class="mock-live"><span class="mock-live-dot"></span> En vivo</span>
+          </div>
+          <!-- KPIs operativos del día (Diego 19/05/2026): consumos del día,
+               suscripciones activas y recaudación. Reemplaza la grilla
+               lun/mar/mié anterior. -->
+          <div class="mock-kpi-row">
+            <div class="mock-kpi">
+              <span class="mock-kpi-num" id="mockCasCounter">184</span>
+              <span class="mock-kpi-lab">consumos hoy</span>
+            </div>
+            <div class="mock-kpi">
+              <span class="mock-kpi-num">198</span>
+              <span class="mock-kpi-lab">suscripciones</span>
+            </div>
+            <div class="mock-kpi">
+              <span class="mock-kpi-num">$4.280.000</span>
+              <span class="mock-kpi-lab">recaudado este mes</span>
+            </div>
+          </div>
+
+          <!-- Feed rotativo: valida saldo / precio por nivel / funcionario / pedido normal.
+               Cada escenario comunica una feature distinta del módulo (PDF problemas 2/3/5/6).
+               Dos slots para que se lea como feed en vivo — top = item nuevo,
+               bottom = item anterior. JS rota ambos con offset. -->
+          <div class="mock-cas-feed">
+            <div class="mock-cas-last">
+              <div class="mock-avatar mock-avatar--c">SM</div>
+              <div class="mock-feed-text"><strong>Sofía Martínez</strong><span>5°B · Menú del día · $2.500</span></div>
+              <span class="mock-feed-time mock-feed-time--live">12:38</span>
+            </div>
+            <div class="mock-cas-last mock-cas-last--prev">
+              <div class="mock-avatar mock-avatar--d">FV</div>
+              <div class="mock-feed-text"><strong>Familia Vergara</strong><span>10 tickets · semana próxima</span></div>
+              <span class="mock-feed-time">12:37</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BR · Gestión interna (desktop) — operaciones del día: sectores + reportes
+         + desempeño. PDF p.10-11 (escaneo QR sector / reclamos infraestructura
+         / historial mensual). -->
+    <div class="hero-mock hero-mock--br" aria-hidden="true">
+      <div class="mock-window mock-window--bare">
+        <div class="mock-body mock-gestion">
+          <div class="mock-app-bar">
+            <div class="mock-app-titles">
+              <strong>Operaciones del día</strong>
+              <span>Equipo en terreno · ahora</span>
+            </div>
+            <span class="mock-trend mock-trend--up">
+              <span class="mock-gest-pill-dot" aria-hidden="true"></span>
+              97% desempeño
+            </span>
+          </div>
+
+          <!-- KPIs operativos: sectores hoy / reportes hoy / desempeño mes -->
+          <div class="mock-gest-stats mock-gest-stats--status">
+            <div class="mock-gest-stat mock-gest-stat--ok">
+              <span class="mock-gest-stat-val">7<i>/9</i></span>
+              <span class="mock-gest-stat-lab">sectores hoy</span>
+            </div>
+            <div class="mock-gest-stat mock-gest-stat--warn">
+              <span class="mock-gest-stat-val">1</span>
+              <span class="mock-gest-stat-lab">reporte abierto</span>
+            </div>
+            <div class="mock-gest-stat mock-gest-stat--crit">
+              <span class="mock-gest-stat-val">3</span>
+              <span class="mock-gest-stat-lab">resueltos hoy</span>
+            </div>
+          </div>
+
+          <!-- Aseo · turno mañana: QR por sector. PDF p.10. -->
+          <div class="mock-gest-chart mock-gest-contracts" aria-hidden="true">
+            <div class="mock-gest-chart-head">
+              <span>Aseo · turno mañana</span>
+              <span class="mock-gest-chart-legend mock-gest-chart-legend--live"><i></i> en vivo</span>
+            </div>
+            <div class="mock-gest-contract-list">
+              <div class="mock-gest-contract mock-gest-contract--ok">
+                <span class="mock-gest-contract-dot"></span>
+                <span class="mock-gest-contract-name">Sala de profesores</span>
+                <span class="mock-gest-contract-state">09:15</span>
+              </div>
+              <div class="mock-gest-contract mock-gest-contract--warn">
+                <span class="mock-gest-contract-dot"></span>
+                <span class="mock-gest-contract-name">Laboratorio</span>
+                <span class="mock-gest-contract-state">en curso</span>
+              </div>
+              <div class="mock-gest-contract mock-gest-contract--ok">
+                <span class="mock-gest-contract-dot"></span>
+                <span class="mock-gest-contract-name">Patio principal</span>
+                <span class="mock-gest-contract-state">09:42</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TR · Ligas / Talleres (mobile) — planilla en vivo de partido intercursos.
+         Feature distintiva del PDF (p.12-13): planilleros registran eventos en
+         tiempo real, tabla de posiciones se actualiza sola. -->
+    <div class="hero-mock hero-mock--tr" aria-hidden="true">
+      <div class="mock-phone">
+        <div class="mock-phone-body mock-ligas">
+          <div class="mock-app-header mock-app-header--ligas">
+            <span class="mock-back-arr">←</span>
+            <div class="mock-app-titles">
+              <strong>5°B vs 6°A · 2–1</strong>
+              <span>Intercursos · min 23'</span>
+            </div>
+          </div>
+
+          <!-- Marcador en vivo con minuto -->
+          <div class="mock-ligas-stat">
+            <div class="mock-ligas-ring" aria-hidden="true">
+              <svg viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="14.5" fill="none" stroke="rgba(155,142,240,.18)" stroke-width="3"/>
+                <circle class="mock-ligas-ring-fill" cx="18" cy="18" r="14.5" fill="none" stroke="url(#ligRingGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="91" stroke-dashoffset="18" transform="rotate(-90 18 18)"/>
+                <defs>
+                  <linearGradient id="ligRingGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#6B5CE7"/>
+                    <stop offset="100%" stop-color="#9B8EF0"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span class="mock-ligas-ring-val">23<i>'</i></span>
+            </div>
+            <div class="mock-ligas-stat-meta">
+              <strong>Planilla en vivo</strong>
+              <span>3 eventos · tabla al día</span>
+            </div>
+          </div>
+
+          <!-- Feed de eventos del partido — íconos brand-aligned (SVG en
+               círculo morado). El emoji se reemplaza por glyphs custom. -->
+          <div class="mock-ligas-list">
+            <div class="mock-ligas-row">
+              <span class="mock-event-icon mock-event-icon--goal" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 4l2 4-2 2.5L10 8l2-4z"/><path d="M19 9l-3 1-1 3 2.5 2 2.5-2"/><path d="M5 9l3 1 1 3-2.5 2L4 13"/><path d="M9 18l1.5-2.5h3L15 18"/></svg>
+              </span>
+              <span class="mock-ligas-name">Gol · Pedro S.</span>
+              <span class="mock-tag-ok">23'</span>
+            </div>
+            <div class="mock-ligas-row mock-ligas-row--anim">
+              <span class="mock-event-icon mock-event-icon--yellow" aria-hidden="true">
+                <span class="mock-event-card mock-event-card--yellow"></span>
+              </span>
+              <span class="mock-ligas-name">Diego M.</span>
+              <span class="mock-tag-pending mock-tag-pending--anim" aria-hidden="true"></span>
+            </div>
+            <div class="mock-ligas-row">
+              <span class="mock-event-icon mock-event-icon--goal" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 4l2 4-2 2.5L10 8l2-4z"/><path d="M19 9l-3 1-1 3 2.5 2 2.5-2"/><path d="M5 9l3 1 1 3-2.5 2L4 13"/><path d="M9 18l1.5-2.5h3L15 18"/></svg>
+              </span>
+              <span class="mock-ligas-name">Gol · Sofía M.</span>
+              <span class="mock-tag-out">18'</span>
+            </div>
+          </div>
+
+          <div class="mock-app-cta">Cerrar planilla</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BL · Centro de Padres (mobile) — vista directiva: bingo + flujo aprobación 3 pasos -->
+    <div class="hero-mock hero-mock--bl" aria-hidden="true">
+      <div class="mock-phone">
+        <div class="mock-phone-body mock-cpa-mobile">
+          <div class="mock-app-header mock-app-header--cpa">
+            <div class="mock-app-titles">
+              <strong>Tesorería CPA</strong>
+              <span>Pamela R. · presidenta</span>
+            </div>
+          </div>
+
+          <!-- Hero card: colecta del bingo desde la mirada de la directiva
+               (cuántas familias pagaron, no cuánto puse yo). PDF p.7/p.9. -->
+          <div class="mock-cpa-hero">
+            <span class="mock-cpa-hero-lab">Bingo fin de año · colecta</span>
+            <strong class="mock-cpa-hero-amt">$1.840.000</strong>
+            <span class="mock-cpa-hero-goal">recaudados</span>
+            <div class="mock-cpa-progress" aria-hidden="true">
+              <div class="mock-cpa-progress-fill" style="--pct:74%"></div>
+            </div>
+          </div>
+
+          <!-- Feed en vivo · 2 items (2da pasada 20/05/2026): el celular tiene
+               solo 356px de alto, 4 items lo estiraban. JS rota el pool. -->
+          <div class="mock-cpa-feed" id="mockCpaFeed">
+            <div class="mock-cpa-feed-item mock-cpa-feed-item--new">
+              <div class="mock-cpa-feed-avatar">G</div>
+              <div class="mock-cpa-feed-meta">
+                <strong>Familia García</strong>
+                <span>Bingo solidario</span>
+              </div>
+              <span class="mock-cpa-feed-amt">$15.000</span>
+              <span class="mock-cpa-feed-time">hace 2s</span>
+            </div>
+            <div class="mock-cpa-feed-item">
+              <div class="mock-cpa-feed-avatar">P</div>
+              <div class="mock-cpa-feed-meta">
+                <strong>Familia Pérez</strong>
+                <span>Bingo solidario</span>
+              </div>
+              <span class="mock-cpa-feed-amt">$12.000</span>
+              <span class="mock-cpa-feed-time">hace 18s</span>
+            </div>
+          </div>
+
+          <div class="mock-app-cta">Ver detalles</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center content -->
+    <div class="container hero-light-inner">
+      <h1 class="hero-light-title" data-anim="hl-title">
+        <span class="hlt-line hlt-line--1">
+          <span class="hlt-word hlt-w-soft">La</span>
+          <span class="hlt-word hlt-w-soft">plataforma</span>
+          <span class="hlt-word hlt-w-soft">de</span>
+        </span>
+        <span class="hlt-line hlt-line--2 hero-light-accent hlt-w-bold">la gestión escolar</span>
+      </h1>
+      <p class="hero-light-sub" data-anim="hl-sub">
+        Un sistema · Cuatro módulos · Tu colegio entero
+      </p>
+      <a href="#productos" class="hero-light-cta" data-anim="hl-cta">
+        <span class="hl-cta-text">Conoce cómo funciona</span>
+        <span class="hl-cta-arrow" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+      <!-- Trust signal · pill estilo "Los 4 módulos" debajo del CTA.
+           El <p> es block normal (queda debajo del CTA en flujo); el span
+           interno .hl-trust-pill recibe el styling pill compacto. -->
+      <p class="hero-light-trust" data-anim="hl-trust">
+        <span class="hl-trust-pill">
+          <span class="hl-trust-dot" aria-hidden="true"></span>
+          Más de 15.000 familias ya lo usan a diario
+        </span>
+      </p>
+
+      <!-- Las 4 pills de módulos vivían acá; se migraron al final de la sección
+           Sofía Martínez (sección ecosistema). El hero queda con foco único en
+           el headline + CTA + trust signal -->
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TRUST STRIP · carrusel infinito de logos
+       Primera sección post-hero (Diego 19/05/2026). Reemplaza la posición
+       anterior del carrusel dentro de la sección Comunidad.
+  ════════════════════════════════════════════ -->
+  <section class="section-trust-strip" data-scroll="center">
+    <div class="container">
+      <!-- Trust-strip title rediseñado: pill con borde sutil + dot animado -->
+      <div class="trust-strip-title-wrap">
+        <span class="trust-strip-title-pill">
+          <span class="trust-strip-title-dot" aria-hidden="true"></span>
+          <span class="trust-strip-title-text">Presentes en Chile y Perú</span>
+        </span>
+      </div>
+      <div class="trust-strip-carousel">
+        <div class="trust-strip-track">
+          <span class="trust-strip-item" data-name="Colegio Mariano de Schönstatt"><img src="img/logo_colegio_mariano.svg" alt="Colegio Mariano de Schönstatt" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Clemente Althaus School"><img src="img/logo_colegio_althaus.svg" alt="Clemente Althaus School" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Manquehue"><img src="img/logo_colegio_manquehue.svg" alt="Colegio Manquehue" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Abraham Lincoln"><img src="img/logo_colegio_abrahamlincoln.svg" alt="Colegio Abraham Lincoln" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Los Alerces"><img src="img/logo_colegio_losalerces.svg" alt="Colegio Los Alerces" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Universidad Católica"><img src="img/logo_uc.svg" alt="Universidad Católica" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Weberbauer Schule"><img src="img/logo_colegio_weberbauer.svg" alt="Weberbauer Schule" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Altair"><img src="img/logo_colegio_altair.svg" alt="Colegio Altair" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio John Andrews"><img src="img/logo_colegio_johnandrews.svg" alt="Colegio John Andrews" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Nuestra Señora del Consuelo"><img src="img/logo_colegio_consuelo.svg" alt="Colegio Nuestra Señora del Consuelo" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio María de las Mercedes"><img src="img/logo_colegio_mercedes.svg" alt="Colegio María de las Mercedes" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Regina Pacis"><img src="img/logo_colegio_reginapacis.svg" alt="Colegio Regina Pacis" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Huinganal"><img src="img/logo_colegio_huinganal.svg" alt="Colegio Huinganal" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Alemán de Puerto Montt"><img src="img/logo_colegio_aleman.svg" alt="Colegio Alemán de Puerto Montt" loading="lazy" decoding="async" /></span>
+          <span class="trust-strip-item" data-name="Colegio Saint Dominic"><img src="img/logo_colegio_saintdominic.svg" alt="Colegio Saint Dominic" loading="lazy" decoding="async" /></span>
+          <!-- Duplicado idéntico para loop seamless -->
+          <span class="trust-strip-item" data-name="Colegio Mariano de Schönstatt" aria-hidden="true"><img src="img/logo_colegio_mariano.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Clemente Althaus School" aria-hidden="true"><img src="img/logo_colegio_althaus.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Manquehue" aria-hidden="true"><img src="img/logo_colegio_manquehue.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Abraham Lincoln" aria-hidden="true"><img src="img/logo_colegio_abrahamlincoln.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Los Alerces" aria-hidden="true"><img src="img/logo_colegio_losalerces.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Universidad Católica" aria-hidden="true"><img src="img/logo_uc.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Weberbauer Schule" aria-hidden="true"><img src="img/logo_colegio_weberbauer.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Altair" aria-hidden="true"><img src="img/logo_colegio_altair.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio John Andrews" aria-hidden="true"><img src="img/logo_colegio_johnandrews.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Nuestra Señora del Consuelo" aria-hidden="true"><img src="img/logo_colegio_consuelo.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio María de las Mercedes" aria-hidden="true"><img src="img/logo_colegio_mercedes.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Regina Pacis" aria-hidden="true"><img src="img/logo_colegio_reginapacis.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Huinganal" aria-hidden="true"><img src="img/logo_colegio_huinganal.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Alemán de Puerto Montt" aria-hidden="true"><img src="img/logo_colegio_aleman.svg" alt="" /></span>
+          <span class="trust-strip-item" data-name="Colegio Saint Dominic" aria-hidden="true"><img src="img/logo_colegio_saintdominic.svg" alt="" /></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-social" id="colegios" data-scroll="center">
+    <!-- Animated background — palette-only blooms + slow conic sweep +
+         flowing horizontal dashed "data streams" that suggest motion of
+         transactions through the system. -->
+    <div class="colegios-bg" aria-hidden="true">
+      <div class="colegios-grid-pattern"></div>
+      <div class="colegios-conic"></div>
+      <div class="colegios-bloom colegios-bloom--1"></div>
+      <div class="colegios-bloom colegios-bloom--2"></div>
+      <div class="colegios-bloom colegios-bloom--3"></div>
+
+      <!-- Constellation network — nodos con líneas conectándolos sugieren
+           "comunidad de colegios conectados a Tap In". Algunos nodos pulsan
+           para dar sensación de actividad real (no decoración estática). -->
+      <svg class="colegios-constellation" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <radialGradient id="cnst-node" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#9B8EF0" stop-opacity=".95"/>
+            <stop offset="60%" stop-color="#6B5CE7" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#4A3CAE" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="cnst-link" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#9B8EF0" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#9B8EF0" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#9B8EF0" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g class="cnst-links" stroke="url(#cnst-link)" stroke-width="1" fill="none">
+          <line x1="120" y1="180" x2="320" y2="120"/>
+          <line x1="320" y1="120" x2="540" y2="220"/>
+          <line x1="540" y1="220" x2="780" y2="140"/>
+          <line x1="780" y1="140" x2="1020" y2="240"/>
+          <line x1="1020" y1="240" x2="1280" y2="160"/>
+          <line x1="120" y1="180" x2="240" y2="380"/>
+          <line x1="240" y1="380" x2="540" y2="220"/>
+          <line x1="540" y1="220" x2="640" y2="500"/>
+          <line x1="780" y1="140" x2="900" y2="420"/>
+          <line x1="900" y1="420" x2="1020" y2="240"/>
+          <line x1="900" y1="420" x2="1180" y2="560"/>
+          <line x1="640" y1="500" x2="900" y2="420"/>
+          <line x1="240" y1="380" x2="440" y2="640"/>
+          <line x1="440" y1="640" x2="640" y2="500"/>
+          <line x1="640" y1="500" x2="820" y2="720"/>
+          <line x1="820" y1="720" x2="1180" y2="560"/>
+          <line x1="1180" y1="560" x2="1320" y2="780"/>
+        </g>
+        <g class="cnst-nodes">
+          <circle class="cnst-n cnst-n--lg pulse-1" cx="120" cy="180" r="6" fill="url(#cnst-node)"/>
+          <circle class="cnst-n" cx="320" cy="120" r="3" fill="#9B8EF0"/>
+          <circle class="cnst-n cnst-n--lg pulse-2" cx="540" cy="220" r="5" fill="url(#cnst-node)"/>
+          <circle class="cnst-n" cx="780" cy="140" r="3" fill="#9B8EF0"/>
+          <circle class="cnst-n cnst-n--lg pulse-3" cx="1020" cy="240" r="6" fill="url(#cnst-node)"/>
+          <circle class="cnst-n" cx="1280" cy="160" r="3" fill="#9B8EF0"/>
+          <circle class="cnst-n" cx="240" cy="380" r="3" fill="#9B8EF0"/>
+          <circle class="cnst-n cnst-n--lg pulse-2" cx="640" cy="500" r="5" fill="url(#cnst-node)"/>
+          <circle class="cnst-n cnst-n--lg pulse-1" cx="900" cy="420" r="6" fill="url(#cnst-node)"/>
+          <circle class="cnst-n" cx="440" cy="640" r="3" fill="#9B8EF0"/>
+          <circle class="cnst-n" cx="820" cy="720" r="3" fill="#9B8EF0"/>
+          <circle class="cnst-n cnst-n--lg pulse-3" cx="1180" cy="560" r="5" fill="url(#cnst-node)"/>
+          <circle class="cnst-n" cx="1320" cy="780" r="3" fill="#9B8EF0"/>
+        </g>
+      </svg>
+
+      <!-- Floating particles — pequeños puntos morados que ascienden lentamente,
+           dan sensación de "actividad viva" sin ser invasivo. -->
+      <div class="colegios-particles">
+        <span class="cp" style="--x:8%;  --d:18s; --delay:0s"></span>
+        <span class="cp" style="--x:18%; --d:24s; --delay:-6s"></span>
+        <span class="cp" style="--x:28%; --d:20s; --delay:-12s"></span>
+        <span class="cp" style="--x:42%; --d:26s; --delay:-3s"></span>
+        <span class="cp" style="--x:56%; --d:22s; --delay:-9s"></span>
+        <span class="cp" style="--x:68%; --d:28s; --delay:-15s"></span>
+        <span class="cp" style="--x:78%; --d:21s; --delay:-2s"></span>
+        <span class="cp" style="--x:88%; --d:25s; --delay:-7s"></span>
+      </div>
+
+      <svg class="colegios-streams" viewBox="0 0 1440 800" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="stream-fade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#6B5CE7" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#6B5CE7" stop-opacity=".7"/>
+            <stop offset="100%" stop-color="#6B5CE7" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="stream-fade-2" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#9B8EF0" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#9B8EF0" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#9B8EF0" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path class="cs cs--1" d="M -100 120 Q 360 90 720 130 T 1540 110" fill="none" stroke="url(#stream-fade)" stroke-width="1.4" stroke-dasharray="6 8"/>
+        <path class="cs cs--2" d="M -100 280 Q 320 320 720 270 T 1540 290" fill="none" stroke="url(#stream-fade-2)" stroke-width="1.2" stroke-dasharray="4 10"/>
+        <path class="cs cs--3" d="M -100 460 Q 440 410 720 470 T 1540 440" fill="none" stroke="url(#stream-fade)" stroke-width="1.6" stroke-dasharray="8 6"/>
+        <path class="cs cs--4" d="M -100 620 Q 380 660 720 600 T 1540 640" fill="none" stroke="url(#stream-fade-2)" stroke-width="1.2" stroke-dasharray="3 12"/>
+      </svg>
+    </div>
+
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-kicker">
+          <span class="kicker-dot"></span>
+          Voces del día a día
+        </span>
+        <h2 class="section-title">Cómo se vive el día <span class="hl">a día con Tap In</span></h2>
+        <p class="section-body" style="max-width:680px;margin:0 auto;">
+          Cada quien tiene su momento, y en cada uno Tap In le simplifica el día
+        </p>
+      </div>
+
+      <!-- TESTIMONIOS OCULTOS (Diego, reunión 19/05/2026) hasta tener testimonios
+           de marca consolidados. Reactivar quitando la clase --hidden -->
+      <div class="testi-carousel testi-carousel--hidden" data-active="0">
+        <button class="testi-arrow testi-arrow--prev" type="button" aria-label="Testimonio anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="testi-arrow testi-arrow--next" type="button" aria-label="Testimonio siguiente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <div class="testi-viewport" aria-live="polite">
+          <div class="testi-track">
+            <!-- Testimonio 1 · Encargada del Casino -->
+            <article class="testi-card" data-testi="0">
+              <div class="testi-watermark" aria-hidden="true"><img src="img/logo_colegio_mariano.svg" alt="" /></div>
+              <span class="testi-tag" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M4 17.5c0-3.6 3.6-6.5 8-6.5s8 2.9 8 6.5"/><path d="M3 17.5h18"/><path d="M9 10.5V4M15 10.5V4"/><path d="M12 4v6.5"/></svg>
+                Casino
+              </span>
+              <span class="testi-quote-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 7H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2zM21 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2z"/></svg>
+              </span>
+              <p class="testi-text">
+                Los apoderados dejaron de preguntarnos por cada recarga. Todo lo
+                ven en la app, reciben alerta cuando el saldo baja, y recargan sin
+                que tengamos que escribirle a nadie. <strong>Cero deuda al cierre del último mes.</strong>
+              </p>
+              <div class="testi-author">
+                <div class="testi-avatar">AM</div>
+                <div class="testi-meta">
+                  <strong>Andrea Muñoz</strong>
+                  <span>Encargada de casino</span>
+                  <span class="testi-school">Mariano de Schönstatt</span>
+                </div>
+                <div class="testi-school-logo" aria-hidden="true">
+                  <img src="img/logo_colegio_mariano.svg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </article>
+
+            <!-- Testimonio 2 · Director administrativo (Gestión) -->
+            <article class="testi-card" data-testi="1">
+              <div class="testi-watermark" aria-hidden="true"><img src="img/logo_colegio_johnandrews.svg" alt="" /></div>
+              <span class="testi-tag" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><rect x="3" y="13" width="3.5" height="8" rx="1"/><rect x="10.25" y="8" width="3.5" height="13" rx="1"/><rect x="17.5" y="3" width="3.5" height="18" rx="1"/></svg>
+                Gestión
+              </span>
+              <span class="testi-quote-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 7H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2zM21 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2z"/></svg>
+              </span>
+              <p class="testi-text">
+                Probamos otras 3 plataformas antes. Tap In fue la única que entendió
+                que cada colegio opera distinto. Dejé de chequear en terreno y empecé
+                a ver el panel desde la oficina — <strong>97% de sectores completados a tiempo en los últimos 4 meses.</strong>
+              </p>
+              <div class="testi-author">
+                <div class="testi-avatar">RS</div>
+                <div class="testi-meta">
+                  <strong>Roberto Silva</strong>
+                  <span>Director administrativo</span>
+                  <span class="testi-school">Colegio John Andrews</span>
+                </div>
+                <div class="testi-school-logo" aria-hidden="true">
+                  <img src="img/logo_colegio_johnandrews.svg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </article>
+
+            <!-- Testimonio 3 · Presidenta CPA (nuevo) -->
+            <article class="testi-card" data-testi="2">
+              <div class="testi-watermark" aria-hidden="true"><img src="img/logo_colegio_manquehue.svg" alt="" /></div>
+              <span class="testi-tag" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M14 20c0-2.5 2-4.5 4-4.5s3 1 3 3"/></svg>
+                Centro de Padres
+              </span>
+              <span class="testi-quote-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 7H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2zM21 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2z"/></svg>
+              </span>
+              <p class="testi-text">
+                Asumí la presidencia y heredé el caos: planillas perdidas, deudas
+                sin documentar, cobranza por WhatsApp. Tap In nos dio un sistema.
+                <strong>Pasamos del 43% al 67% de cuotas pagadas en la primera semana</strong>, sin escribir un solo recordatorio.
+              </p>
+              <div class="testi-author">
+                <div class="testi-avatar">CV</div>
+                <div class="testi-meta">
+                  <strong>Carolina Vergara</strong>
+                  <span>Presidenta del CPA</span>
+                  <span class="testi-school">Colegio Manquehue</span>
+                </div>
+                <div class="testi-school-logo" aria-hidden="true">
+                  <img src="img/logo_colegio_manquehue.svg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </article>
+
+            <!-- Testimonio 4 · Coordinador deportivo / Ligas (nuevo) -->
+            <article class="testi-card" data-testi="3">
+              <div class="testi-watermark" aria-hidden="true"><img src="img/logo_colegio_saintdominic.svg" alt="" /></div>
+              <span class="testi-tag" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M8 4h8v4a4 4 0 0 1-8 0V4Z"/><path d="M5 5H3v1.5a3 3 0 0 0 3 3"/><path d="M19 5h2v1.5a3 3 0 0 1-3 3"/><path d="M12 12v4"/><path d="M9.5 20h5l-.5-4h-4l-.5 4Z"/></svg>
+                Ligas y Talleres
+              </span>
+              <span class="testi-quote-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 7H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2zM21 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2z"/></svg>
+              </span>
+              <p class="testi-text">
+                Antes las inscripciones eran formulario, transferencia, comprobante
+                por WhatsApp y un Excel que actualizaba yo. Hoy publico el taller y
+                las familias se inscriben pagando desde el celular —
+                <strong>20 cupos llenos en 3 días, sin confirmar nada manualmente.</strong>
+              </p>
+              <div class="testi-author">
+                <div class="testi-avatar">PS</div>
+                <div class="testi-meta">
+                  <strong>Pablo Sánchez</strong>
+                  <span>Coordinador deportivo</span>
+                  <span class="testi-school">Colegio Saint Dominic</span>
+                </div>
+                <div class="testi-school-logo" aria-hidden="true">
+                  <img src="img/logo_colegio_saintdominic.svg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </article>
+
+            <!-- Testimonio 5 · Apoderada (nuevo — voz familiar Casino) -->
+            <article class="testi-card" data-testi="4">
+              <div class="testi-watermark" aria-hidden="true"><img src="img/logo_colegio_johnandrews.svg" alt="" /></div>
+              <span class="testi-tag" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M4 17.5c0-3.6 3.6-6.5 8-6.5s8 2.9 8 6.5"/><path d="M3 17.5h18"/><path d="M9 10.5V4M15 10.5V4"/><path d="M12 4v6.5"/></svg>
+                Casino
+              </span>
+              <span class="testi-quote-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 7H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2zM21 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2z"/></svg>
+              </span>
+              <p class="testi-text">
+                Soy contadora y trabajo todo el día. Antes llamaba al colegio para
+                saber qué comió mi hija. Hoy lo veo desde el celular en 10 segundos,
+                recargo si necesito, y sigo con mi día. <strong>Es una preocupación menos por la mañana.</strong>
+              </p>
+              <div class="testi-author">
+                <div class="testi-avatar">CR</div>
+                <div class="testi-meta">
+                  <strong>Camila Riveros</strong>
+                  <span>Mamá de Sofía · 5°B</span>
+                  <span class="testi-school">Colegio John Andrews</span>
+                </div>
+                <div class="testi-school-logo" aria-hidden="true">
+                  <img src="img/logo_colegio_johnandrews.svg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </article>
+
+            <!-- Testimonio 6 · Apoderado (nuevo — voz familiar CPA) -->
+            <article class="testi-card" data-testi="5">
+              <div class="testi-watermark" aria-hidden="true"><img src="img/logo_colegio_manquehue.svg" alt="" /></div>
+              <span class="testi-tag" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M14 20c0-2.5 2-4.5 4-4.5s3 1 3 3"/></svg>
+                Centro de Padres
+              </span>
+              <span class="testi-quote-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 7H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2zM21 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v3a3 3 0 0 1-3 3v2a5 5 0 0 0 5-5V9a2 2 0 0 0 0-2z"/></svg>
+              </span>
+              <p class="testi-text">
+                El CPA siempre fue WhatsApps cruzados y planillas que nunca supe
+                quién manejaba. Ahora veo cada peso que entra, cada gasto aprobado
+                y por quién. <strong>Sé en qué se está usando la plata de mis aportes.</strong> Eso vale.
+              </p>
+              <div class="testi-author">
+                <div class="testi-avatar">AM</div>
+                <div class="testi-meta">
+                  <strong>Andrés Martínez</strong>
+                  <span>Papá de Diego · 3° básico</span>
+                  <span class="testi-school">Colegio Manquehue</span>
+                </div>
+                <div class="testi-school-logo" aria-hidden="true">
+                  <img src="img/logo_colegio_manquehue.svg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="testi-dots" role="tablist" aria-label="Paginación de testimonios">
+          <button class="testi-dot is-active" type="button" data-dot="0" aria-label="Ir al grupo 1"></button>
+          <button class="testi-dot" type="button" data-dot="1" aria-label="Ir al grupo 2"></button>
+          <button class="testi-dot" type="button" data-dot="2" aria-label="Ir al grupo 3"></button>
+          <button class="testi-dot" type="button" data-dot="3" aria-label="Ir al grupo 4"></button>
+          <button class="testi-dot" type="button" data-dot="4" aria-label="Ir al grupo 5"></button>
+        </div>
+      </div>
+
+      <!-- Partners marquee removido (Diego 19/05/2026): el carrusel se reubicó
+           justo debajo del hero como section-trust-strip. -->
+
+
+      <!-- Moments CARRUSEL DESLIZANTE (3ra pasada 21/05/2026): track con 3
+           cards visibles, destacada al centro (opacity 1 + scale 1). Laterales
+           atenuadas. Click en lateral → centra esa card y abre su "Ver más"
+           automáticamente. Auto-rotación cada 5s; se detiene al click manual
+           y reanuda al re-entrar al viewport. Mobile: scroll-snap horizontal. -->
+      <div class="moments moments--carousel" role="list" aria-label="Voces reales de quienes usan Tap In">
+        <div class="moments-viewport">
+          <div class="moments-track">
+        <!-- Moment 1 · Gestión (mañana) — el director ve sectores en vivo
+             en lugar de chequear en terreno. PDF p.10 Problema 1. -->
+        <article class="moment" role="listitem" data-moment="0">
+          <div class="moment-photo">
+            <img src="img/moment-director.webp" alt="Coordinador de servicios revisando el panel de operaciones desde su laptop" loading="lazy" decoding="async" />
+            <span class="moment-overlay"></span>
+            <span class="moment-tag" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><rect x="3" y="13" width="3.5" height="8" rx="1"/><rect x="10.25" y="8" width="3.5" height="13" rx="1"/><rect x="17.5" y="3" width="3.5" height="18" rx="1"/></svg>
+              Gestión
+            </span>
+            <div class="moment-extra" aria-hidden="true">
+              <span class="moment-extra-tag">El cambio en operaciones</span>
+              <p>Cada solicitud llega al sistema, se asigna y queda registrada automáticamente. <strong>97% de cumplimiento a tiempo</strong> los últimos 4 meses y <strong>80% menos reclamos</strong> sin documentar.</p>
+            </div>
+          </div>
+          <div class="moment-caption">
+            <span class="moment-time"><span class="moment-time-dot" aria-hidden="true"></span>8:15 am</span>
+            <strong>Javier comienza el día</strong>
+            <span>cada solicitud con responsable y aviso</span>
+            <span class="moment-by">— Coordinador de servicios · Santiago</span>
+            <div class="moment-actions">
+              <button class="moment-toggle" type="button" aria-expanded="false" aria-label="Ver más de este momento">
+                <span class="moment-toggle-text" data-text-open="Ver más" data-text-close="Cerrar">Ver más</span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v10"/><path d="M3 8h10"/></svg>
+              </button>
+              <a class="moment-cta" href="gestion-de-proveedores.html">
+                Ir a la solución
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10"/><path d="M9 3l5 5-5 5"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Moment 2 · CPA (mediodía) — apoderada ve la colecta del bingo
+             y aporta desde el celular sin WhatsApp. PDF p.7-9. -->
+        <article class="moment" role="listitem" data-moment="1">
+          <div class="moment-photo">
+            <img src="img/moment-apoderada.webp" alt="Apoderada revisando la colecta del Centro de Padres en su teléfono" loading="lazy" decoding="async" />
+            <span class="moment-overlay"></span>
+            <span class="moment-tag" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M14 20c0-2.5 2-4.5 4-4.5s3 1 3 3"/></svg>
+              Centro de Padres
+            </span>
+            <div class="moment-extra" aria-hidden="true">
+              <span class="moment-extra-tag">El cambio en tesorería</span>
+              <p>Cada aporte entra conciliado automáticamente, sin Excel ni registros manuales. <strong>$18.540.000 recaudados</strong> de <strong>420 familias</strong> y la rendición lista para descargar sin preparar nada.</p>
+            </div>
+          </div>
+          <div class="moment-caption">
+            <span class="moment-time"><span class="moment-time-dot" aria-hidden="true"></span>12:34 pm</span>
+            <strong>Camila aporta al bingo del CPA</strong>
+            <span>el pago se concilia sin juntar comprobantes</span>
+            <span class="moment-by">— Apoderada · 4° básico</span>
+            <div class="moment-actions">
+              <button class="moment-toggle" type="button" aria-expanded="false" aria-label="Ver más de este momento">
+                <span class="moment-toggle-text" data-text-open="Ver más" data-text-close="Cerrar">Ver más</span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v10"/><path d="M3 8h10"/></svg>
+              </button>
+              <a class="moment-cta" href="centro-de-padres.html">
+                Ir a la solución
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10"/><path d="M9 3l5 5-5 5"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Moment 3 · Casino (tarde) — el flujo de almuerzo opera solo
+             y la familia se entera al instante. PDF p.2 Problemas 1-2. -->
+        <article class="moment" role="listitem" data-moment="2">
+          <div class="moment-photo">
+            <img src="img/moment-comedor.webp" alt="Estudiante llegando al comedor del colegio mientras sus compañeros almuerzan al fondo" loading="lazy" decoding="async" />
+            <span class="moment-overlay"></span>
+            <span class="moment-tag" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M4 17.5c0-3.6 3.6-6.5 8-6.5s8 2.9 8 6.5"/><path d="M3 17.5h18"/><path d="M9 10.5V4M15 10.5V4"/><path d="M12 4v6.5"/></svg>
+              Comedor Escolar
+            </span>
+            <div class="moment-extra" aria-hidden="true">
+              <span class="moment-extra-tag">El cambio en el comedor</span>
+              <p>Cada consumo se valida en 2 segundos y cada pago se registra automáticamente. <strong>300 almuerzos en un día</strong>, <strong>100% pagados</strong> y <strong>cero morosos</strong> al cierre del mes.</p>
+            </div>
+          </div>
+          <div class="moment-caption">
+            <span class="moment-time"><span class="moment-time-dot" aria-hidden="true"></span>13:02 pm</span>
+            <strong>Sofía pasa a almorzar</strong>
+            <span>le avisan a su mamá y le recuerdan renovar</span>
+            <span class="moment-by">— Apoderada · 5° básico</span>
+            <div class="moment-actions">
+              <button class="moment-toggle" type="button" aria-expanded="false" aria-label="Ver más de este momento">
+                <span class="moment-toggle-text" data-text-open="Ver más" data-text-close="Cerrar">Ver más</span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v10"/><path d="M3 8h10"/></svg>
+              </button>
+              <a class="moment-cta" href="comedor-escolar.html">
+                Ir a la solución
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10"/><path d="M9 3l5 5-5 5"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Moment 4 · Talleres y Ligas (tarde) — profesor del taller toma
+             la asistencia desde el celular al inicio de la sesión. Reemplaza
+             el ejemplo anterior de "planilla del intercursos" (22/05/2026):
+             la asistencia digital comunica mejor el beneficio operativo
+             (trazabilidad + visibilidad al apoderado) que el planilleo en
+             vivo, que se sentía más nicho. -->
+        <article class="moment" role="listitem" data-moment="3">
+          <div class="moment-photo">
+            <img src="img/moment-talleres.webp" alt="Coordinador registrando la jornada del taller desde su celular" loading="lazy" decoding="async" />
+            <span class="moment-overlay"></span>
+            <span class="moment-tag" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M8 4h8v4a4 4 0 0 1-8 0V4Z"/><path d="M5 5H3v1.5a3 3 0 0 0 3 3"/><path d="M19 5h2v1.5a3 3 0 0 1-3 3"/><path d="M12 12v4"/><path d="M9.5 20h5l-.5-4h-4l-.5 4Z"/></svg>
+              Talleres y Ligas
+            </span>
+            <div class="moment-extra" aria-hidden="true">
+              <span class="moment-extra-tag">El cambio en talleres y ligas</span>
+              <p>Antes la asistencia, los pagos y la tabla se llevaban a mano, en planillas y Excel. Ahora todo se registra en tiempo real desde el celular: cada jugador marcado, cada cuota al día y la tabla siempre actualizada. <strong>100% trazable</strong>, lo opere el colegio o una liga externa.</p>
+            </div>
+          </div>
+          <div class="moment-caption">
+            <span class="moment-time"><span class="moment-time-dot" aria-hidden="true"></span>16:00 pm</span>
+            <strong>Pablo cierra la jornada desde el celular</strong>
+            <span>asistencia, pagos y tabla, en un solo lugar</span>
+            <span class="moment-by">— Coordinador de talleres y ligas</span>
+            <div class="moment-actions">
+              <button class="moment-toggle" type="button" aria-expanded="false" aria-label="Ver más de este momento">
+                <span class="moment-toggle-text" data-text-open="Ver más" data-text-close="Cerrar">Ver más</span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v10"/><path d="M3 8h10"/></svg>
+              </button>
+              <a class="moment-cta" href="ligas-y-talleres.html">
+                Ir a la solución
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10"/><path d="M9 3l5 5-5 5"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+          </div><!-- /.moments-track -->
+        </div><!-- /.moments-viewport -->
+        <!-- Flechas prev/next (Bloque 2) — solo desktop -->
+        <button type="button" class="moments-arrow moments-arrow--prev" aria-label="Card anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button type="button" class="moments-arrow moments-arrow--next" aria-label="Card siguiente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <!-- Contador 0X/04 removido (25/05/2026 v5): estorbaba más que aportaba.
+             Las flechas + auto-rotate ya comunican la idea de carrusel. -->
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       PRODUCTOS V7 · sistema de tabs + 1 panel grande
+       Reemplaza el stack vertical de prodv6 (Diego 19/05/2026).
+       Auto-rota cada 6s; click manual detiene rotación para la sesión.
+  ════════════════════════════════════════════ -->
+  <section class="section-productos prodv6 prodv7" id="productos">
+    <div class="section-header centered prodv6-section-header container">
+      <span class="section-kicker"><span class="kicker-dot"></span> Los 4 módulos</span>
+      <h2 class="section-title"><span class="hl">Elige qué resolver primero</span></h2>
+      <p class="prodv7-section-sub">Cuatro módulos que resuelven el día a día de tu colegio. Empieza por el que más te urge y suma los demás cuando quieras</p>
+    </div>
+
+    <!-- Tabs (4 módulos): scrollables horizontalmente en mobile si no caben -->
+    <div class="prodv7-tabs-wrap container">
+      <div class="prodv7-tabs" role="tablist" aria-label="Módulos de Tap In">
+        <button type="button" class="prodv7-tab is-active" role="tab" aria-selected="true" data-tab="casino">
+          <span class="prodv7-tab-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17.5c0-3.6 3.6-6.5 8-6.5s8 2.9 8 6.5"/><path d="M3 17.5h18"/><path d="M9 10.5V4M15 10.5V4"/><path d="M12 4v6.5"/></svg>
+          </span>
+          <span>Comedor Escolar</span>
+        </button>
+        <button type="button" class="prodv7-tab" role="tab" aria-selected="false" data-tab="cpa">
+          <span class="prodv7-tab-icon" aria-hidden="true">
+            <!-- Hucha con moneda (3ra pasada) -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14c0-3.3 3.6-6 8-6s8 2.7 8 6c0 1.3-.5 2.5-1.5 3.5L19 20h-3l-.5-1.5c-1 .3-2.3.5-3.5.5s-2.5-.2-3.5-.5L8 20H5l.5-2.5C4.5 16.5 4 15.3 4 14Z"/><path d="M9 8.5c.5-1 1.5-1.5 2.5-1.5"/><circle cx="16" cy="13" r="0.8" fill="currentColor"/><path d="M10 11h4"/><circle cx="12" cy="5" r="2"/></svg>
+          </span>
+          <span>Centro de Padres</span>
+        </button>
+        <button type="button" class="prodv7-tab" role="tab" aria-selected="false" data-tab="gestion">
+          <span class="prodv7-tab-icon" aria-hidden="true">
+            <!-- Clipboard con checklist (3ra pasada) -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M8.5 10l1.5 1.5L13 8.5"/><path d="M9 14h7"/><path d="M9 17h5"/></svg>
+          </span>
+          <span>Gestión de Proveedores</span>
+        </button>
+        <button type="button" class="prodv7-tab" role="tab" aria-selected="false" data-tab="ligas">
+          <span class="prodv7-tab-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v4a4 4 0 0 1-8 0V4Z"/><path d="M5 5H3v1.5a3 3 0 0 0 3 3"/><path d="M19 5h2v1.5a3 3 0 0 1-3 3"/><path d="M12 12v4"/><path d="M9.5 20h5l-.5-4h-4l-.5 4Z"/></svg>
+          </span>
+          <span>Talleres y Ligas</span>
+        </button>
+        <!-- Indicador del activo (underline morado) -->
+        <span class="prodv7-tab-indicator" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- Stack de paneles: solo 1 visible a la vez (.is-active) -->
+    <div class="prodv7-stack">
+      <article class="prodv6-card prodv6-card--casino is-active" data-prod="casino" data-idx="0">
+        <div class="prodv6-card-bg" aria-hidden="true"></div>
+        <div class="prodv6-card-inner">
+          <div class="prodv6-card-text">
+            <h3 class="prodv6-card-name"><span class="cn-em">El comedor anda en automático</span><span class="cn-2">y el operador <strong>puede respirar</strong></span></h3>
+            <div class="prodv6-card-outcome prodv6-card-outcome--casino">
+              <div class="outcome-top">
+                <strong>100%</strong>
+                <span class="outcome-badge">conciliado · hoy</span>
+              </div>
+              <span class="outcome-desc">pagos conciliados automáticamente · sin papel ni deuda</span>
+              <div class="outcome-bar" style="--fill:100%"></div>
+            </div>
+            <ul class="prodv7-card-bullets">
+              <li><strong>300 almuerzos</strong> en un día, validados en segundos</li>
+              <li>El apoderado <strong>recarga desde el celular</strong>, sin que persigas a nadie</li>
+              <li>Cierre del día <strong>automático</strong>: todo cuadrado, sin papel</li>
+            </ul>
+            <a class="prodv6-card-cta" href="comedor-escolar.html">Conoce el módulo de Comedor<svg viewBox="0 0 14 14" fill="none" width="14" height="14"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+          <div class="prodv6-card-mocks prodv6-card-mocks--hero">
+            <!-- Mockup integrado: módulo conciliación en vivo (apoderado paga
+                 → admin lo ve). Embed del standalone mockups/mockup-comedor-modulo.html
+                 28/05/2026 — reemplaza los 2 mockups anteriores (cas-1, cas-2) -->
+            <article class="prodv6-mock prodv6-mock--modulo" data-mock="cas-modulo">
+              <div class="cmodulo-stage">
+                <iframe
+                  src="mockups/mockup-comedor-modulo.html"
+                  title="Demostración interactiva del flujo de pago en el módulo Comedor Escolar"
+                  aria-label="Animación: una apoderada paga la suscripción mensual desde la app y el admin del colegio ve el pago aparecer en su panel en tiempo real, con métricas actualizándose automáticamente"
+                  class="cmodulo-iframe"
+                  loading="eager"
+                  scrolling="no"></iframe>
+              </div>
+            </article>
+          </div>
+        </div>
+      </article>
+
+      <article class="prodv6-card prodv6-card--cpa" data-prod="cpa" data-idx="1">
+        <div class="prodv6-card-bg" aria-hidden="true"></div>
+        <div class="prodv6-card-inner">
+          <div class="prodv6-card-text">
+            <h3 class="prodv6-card-name"><span class="cn-em">La tesorería del CPA</span><span class="cn-2">fluye, <strong>sin el caos de antes</strong></span></h3>
+            <div class="prodv6-card-outcome prodv6-card-outcome--cpa">
+              <div class="outcome-top">
+                <strong>67%</strong>
+              </div>
+              <span class="outcome-desc">de cuotas pagadas en la primera semana · sin un recordatorio enviado</span>
+              <div class="outcome-bar" style="--fill:67%"></div>
+            </div>
+            <ul class="prodv7-card-bullets">
+              <li>El apoderado paga con <strong>1 click</strong>, sin links ni transferencias</li>
+              <li>Cada peso con nombre y fecha · <strong>rendición automática</strong></li>
+              <li>Historial completo, <strong>listo para la asamblea</strong></li>
+            </ul>
+            <a class="prodv6-card-cta" href="centro-de-padres.html">Descubre la tesorería sin caos<svg viewBox="0 0 14 14" fill="none" width="14" height="14"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+          <div class="prodv6-card-mocks prodv6-card-mocks--hero">
+            <!-- Mockup integrado: Cartola Inteligente · embed del standalone
+                 mockups/mockup-cpa-cartola.html · reemplaza los 2 mockups previos
+                 (cpa-desk + cpa-1) -->
+            <article class="prodv6-mock prodv6-mock--modulo" data-mock="cpa-cartola">
+              <div class="cmodulo-stage">
+                <iframe
+                  src="mockups/mockup-cpa-cartola.html"
+                  title="Demostración interactiva de la Cartola Inteligente del CPA"
+                  aria-label="Animación: el tesorero arrastra la cartola del banco, la IA clasifica automáticamente cada movimiento por categoría de presupuesto y muestra el resumen consolidado del mes"
+                  class="cmodulo-iframe"
+                  loading="eager"
+                  scrolling="no"></iframe>
+              </div>
+            </article>
+          </div>
+        </div>
+      </article>
+
+      <article class="prodv6-card prodv6-card--gestion" data-prod="gestion" data-idx="2">
+        <div class="prodv6-card-bg" aria-hidden="true"></div>
+        <div class="prodv6-card-inner">
+          <div class="prodv6-card-text">
+            <h3 class="prodv6-card-name"><span class="cn-em">Tus proveedores</span><span class="cn-2">en orden con <strong>datos reales</strong></span></h3>
+            <div class="prodv6-card-outcome prodv6-card-outcome--gestion">
+              <div class="outcome-top">
+                <strong>97%</strong>
+                <span class="outcome-badge">✓ a tiempo</span>
+              </div>
+              <span class="outcome-desc">sectores completados · 4 meses con datos reales</span>
+            </div>
+            <ul class="prodv7-card-bullets">
+              <li>Cada sector con <strong>foto, hora y responsable</strong></li>
+              <li>Cada reclamo con dueño y fecha, <strong>nada queda en el aire</strong></li>
+              <li>Al renovar, <strong>12 meses de datos reales</strong>, no suposiciones</li>
+            </ul>
+            <a class="prodv6-card-cta" href="gestion-de-proveedores.html">Explora la trazabilidad con tus proveedores<svg viewBox="0 0 14 14" fill="none" width="14" height="14"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+          <div class="prodv6-card-mocks prodv6-card-mocks--hero">
+            <!-- Mockup integrado: Tarea creada y notificada · embed del standalone
+                 mockups/mockup-gestion-tarea.html · reemplaza los 2 mockups previos
+                 (gest-1 + gest-2) -->
+            <article class="prodv6-mock prodv6-mock--modulo" data-mock="gest-tarea">
+              <div class="cmodulo-stage">
+                <iframe
+                  src="mockups/mockup-gestion-tarea.html"
+                  title="Demostración interactiva: el admin crea una tarea y el personal la recibe por WhatsApp al instante"
+                  aria-label="Animación: el administrador del colegio crea una tarea de mantención desde el panel y el trabajador la recibe por WhatsApp en tiempo real. Cuando el trabajador la marca como realizada desde su celular, el panel se actualiza automáticamente."
+                  class="cmodulo-iframe"
+                  loading="eager"
+                  scrolling="no"></iframe>
+              </div>
+            </article>
+          </div>
+        </div>
+      </article>
+
+      <article class="prodv6-card prodv6-card--ligas" data-prod="ligas" data-idx="3">
+        <div class="prodv6-card-bg" aria-hidden="true"></div>
+        <div class="prodv6-card-inner">
+          <div class="prodv6-card-text">
+            <h3 class="prodv6-card-name"><span class="cn-em">Los cupos se llenan y se cobran</span><span class="cn-2">automáticamente, <strong>tú no confirmas nada</strong></span></h3>
+            <div class="prodv6-card-outcome prodv6-card-outcome--ligas">
+              <div class="outcome-top">
+                <strong>20</strong><em class="outcome-denom">/20</em>
+                <span class="outcome-badge outcome-badge--green">completo</span>
+              </div>
+              <span class="outcome-desc">cupos llenados en 3 días · cierre automático al límite</span>
+            </div>
+            <ul class="prodv7-card-bullets">
+              <li><strong>20 cupos</strong> llenos en 3 días, sin un llamado</li>
+              <li>El cobro ocurre <strong>al momento de inscribirse</strong></li>
+              <li>Asistencia en 30 segundos · <strong>el apoderado se entera al instante</strong></li>
+            </ul>
+            <a class="prodv6-card-cta" href="ligas-y-talleres.html">Ver cómo se llenan los cupos<svg viewBox="0 0 14 14" fill="none" width="14" height="14"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+          <div class="prodv6-card-mocks prodv6-card-mocks--hero">
+            <!-- Mockup integrado: Talleres que se gestionan solos · embed del
+                 standalone mockups/mockup-talleres-modulo.html · reemplaza los
+                 2 mockups previos (lig-desk + lig-1) -->
+            <article class="prodv6-mock prodv6-mock--modulo" data-mock="tall-cupos">
+              <div class="cmodulo-stage">
+                <iframe
+                  src="mockups/mockup-talleres-modulo.html"
+                  title="Demostración interactiva: los cupos de talleres se llenan automáticamente con cada pago recibido"
+                  aria-label="Animación: el panel del coordinador muestra 3 talleres activos. Llegan pagos en tiempo real que se asignan automáticamente al taller correspondiente. Cuando un taller llega al 100% de cupos, se cierra solo y el coordinador puede exportar la lista de inscritos en PDF."
+                  class="cmodulo-iframe"
+                  loading="eager"
+                  scrolling="no"></iframe>
+              </div>
+            </article>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Indicador lateral .prodv6-progress eliminado: el nuevo sistema usa
+         las tabs arriba (con auto-rotación) en vez de un indicador secuencial. -->
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       EL ECOSISTEMA · cierre Sofía (restaurado del backup 20/05/2026)
+       Reemplaza la sección "Un día con Tap In" con 4 momentos+pills que
+       no terminaron de convencer. Vuelve al bloque limpio anterior: kicker,
+       título grande + grid 2×2 de íconos con micro-status de cada módulo.
+  ════════════════════════════════════════════ -->
+  <section class="prodv6-closing-wrap" aria-label="El ecosistema">
+    <div class="container">
+      <article class="prodv6-closing">
+        <div class="prodv6-closing-inner">
+          <div class="prodv6-closing-text">
+            <span class="section-kicker eco-kicker"><span class="kicker-dot"></span> EL ECOSISTEMA</span>
+            <h3 class="prodv6-closing-title">
+              <span class="cn-em">Todo conectado,</span>
+              <span class="cn-2">todo <strong style="display:inline">al instante</strong></span>
+            </h3>
+            <p class="prodv6-closing-body">Cobros, consumos, tareas y cupos: todo<br />sincronizado y al instante, en una pantalla</p>
+            <a href="#contacto" class="eco-cta-btn">
+              Solicitar demo del ecosistema
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+          <!-- Live tiles (3ra pasada 21/05/2026): cada celda es un mini-mockup
+               que cicla una micro-animación demostrando el beneficio del módulo.
+               Las cells son <a> linkeando a la página interna del módulo. -->
+          <div class="prodv6-closing-grid">
+            <!-- Celda 1 · Comedor: contador de consumos + feed -->
+            <a href="comedor-escolar.html" class="prodv6-closing-cell prodv6-closing-cell--live" data-eco-cell="comedor">
+              <div class="prodv6-closing-cell-head">
+                <span class="prodv6-closing-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 17.5c0-3.6 3.6-6.5 8-6.5s8 2.9 8 6.5"/><path d="M3 17.5h18"/><path d="M9 10.5V4M15 10.5V4"/><path d="M12 4v6.5"/></svg>
+                </span>
+                <strong>Comedor</strong>
+              </div>
+              <div class="prodv6-closing-cell-body">
+                <div class="prodv6-closing-live-counter">
+                  <span class="prodv6-closing-live-num" data-eco-counter="217">0</span>
+                  <span class="prodv6-closing-live-lab">consumos hoy</span>
+                </div>
+                <div class="prodv6-closing-live-feed">
+                  <span class="prodv6-closing-live-feed-item">Tomás Vergara · 13:05</span>
+                </div>
+              </div>
+              <span class="prodv6-closing-cell-link">Ver módulo <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </a>
+
+            <!-- Celda 2 · CPA: barra del bingo subiendo -->
+            <a href="centro-de-padres.html" class="prodv6-closing-cell prodv6-closing-cell--live" data-eco-cell="cpa">
+              <div class="prodv6-closing-cell-head">
+                <span class="prodv6-closing-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 14c0-3.3 3.6-6 8-6s8 2.7 8 6c0 1.3-.5 2.5-1.5 3.5L19 20h-3l-.5-1.5c-1 .3-2.3.5-3.5.5s-2.5-.2-3.5-.5L8 20H5l.5-2.5C4.5 16.5 4 15.3 4 14Z"/><path d="M9 8.5c.5-1 1.5-1.5 2.5-1.5"/><circle cx="16" cy="13" r="0.8" fill="currentColor"/><path d="M10 11h4"/><circle cx="12" cy="5" r="2"/></svg>
+                </span>
+                <strong>Centro de Padres</strong>
+              </div>
+              <div class="prodv6-closing-cell-body">
+                <div class="prodv6-closing-live-bingo">
+                  <span class="prodv6-closing-live-bingo-lab">Bingo solidario</span>
+                  <strong class="prodv6-closing-live-bingo-pct" data-eco-bingo="74">74%</strong>
+                  <div class="prodv6-closing-live-bingo-bar">
+                    <div class="prodv6-closing-live-bingo-fill" style="--w:74%; width:74%"></div>
+                  </div>
+                  <span class="prodv6-closing-live-bingo-raised">$1.110.000 recaudados</span>
+                </div>
+              </div>
+              <span class="prodv6-closing-cell-link">Ver módulo <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </a>
+
+            <!-- Celda 3 · Gestión: checklist con sectores -->
+            <a href="gestion-de-proveedores.html" class="prodv6-closing-cell prodv6-closing-cell--live" data-eco-cell="gestion">
+              <div class="prodv6-closing-cell-head">
+                <span class="prodv6-closing-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M8.5 10l1.5 1.5L13 8.5"/><path d="M9 14h7"/><path d="M9 17h5"/></svg>
+                </span>
+                <strong>Gestión</strong>
+              </div>
+              <div class="prodv6-closing-cell-body">
+                <ul class="prodv6-closing-live-check">
+                  <li data-eco-sector="0">Sala profesores</li>
+                  <li data-eco-sector="1">Patio principal</li>
+                  <li data-eco-sector="2">Biblioteca</li>
+                  <li data-eco-sector="3">Laboratorio</li>
+                </ul>
+              </div>
+              <span class="prodv6-closing-cell-link">Ver módulo <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </a>
+
+            <!-- Celda 4 · Talleres: cupos -->
+            <a href="ligas-y-talleres.html" class="prodv6-closing-cell prodv6-closing-cell--live" data-eco-cell="ligas">
+              <div class="prodv6-closing-cell-head">
+                <span class="prodv6-closing-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M8 4h8v4a4 4 0 0 1-8 0V4Z"/><path d="M5 5H3v1.5a3 3 0 0 0 3 3"/><path d="M19 5h2v1.5a3 3 0 0 1-3 3"/><path d="M12 12v4"/><path d="M9.5 20h5l-.5-4h-4l-.5 4Z"/></svg>
+                </span>
+                <strong>Talleres</strong>
+              </div>
+              <div class="prodv6-closing-cell-body">
+                <div class="prodv6-closing-live-cupos">
+                  <span class="prodv6-closing-live-cupos-taller">Tenis · jueves</span>
+                  <strong class="prodv6-closing-live-cupos-num" data-eco-cupos="18">18 / 20</strong>
+                  <span class="prodv6-closing-live-cupos-status">cupos · inscripciones abiertas</span>
+                </div>
+              </div>
+              <span class="prodv6-closing-cell-link">Ver módulo <svg width="10" height="10" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </a>
+
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       LIGHT REGION — single continuous white surface
+       wrapping como, beneficios, social, objeciones
+       so there are no per-section bg seams between them.
+  ════════════════════════════════════════════ -->
+  <div class="bg-light-stack">
+
+  <!-- ═══════════════════════════════════════════
+       OBJECIONES
+  ════════════════════════════════════════════ -->
+  <section class="section-objeciones" id="objeciones">
+    <div class="faq-bg" aria-hidden="true">
+      <!-- Topographic curves — "curvas de nivel" estilizadas en el costado
+           derecho. Pasan suavemente por el eje horizontal con drift sutil. -->
+      <svg class="faq-topo" viewBox="0 0 600 600" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="faq-topo-line" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#9B8EF0" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#9B8EF0" stop-opacity=".35"/>
+            <stop offset="100%" stop-color="#9B8EF0" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#faq-topo-line)" stroke-width="1">
+          <path class="ftc ftc--1" d="M 0 80 Q 200 60 400 90 T 800 70"/>
+          <path class="ftc ftc--2" d="M 0 140 Q 220 120 420 150 T 820 130"/>
+          <path class="ftc ftc--3" d="M 0 210 Q 240 180 460 220 T 840 200"/>
+          <path class="ftc ftc--4" d="M 0 290 Q 220 260 440 300 T 820 280"/>
+          <path class="ftc ftc--5" d="M 0 380 Q 240 350 460 390 T 840 370"/>
+          <path class="ftc ftc--6" d="M 0 470 Q 220 440 440 480 T 820 460"/>
+        </g>
+      </svg>
+
+      <!-- Floating question glyph — un signo de pregunta etéreo, MUY
+           translúcido, en la zona superior central. Sirve de motif
+           atmosférico que conecta el background con el tema (preguntas)
+           sin gritar. -->
+      <div class="faq-glyph" aria-hidden="true">
+        <svg viewBox="0 0 120 160">
+          <path d="M 30 50 Q 30 20 60 20 Q 90 20 90 50 Q 90 70 70 80 Q 60 86 60 100" fill="none" stroke="rgba(155,142,240,.10)" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="60" cy="130" r="8" fill="rgba(155,142,240,.10)"/>
+        </svg>
+      </div>
+
+      <div class="faq-grid"></div>
+      <div class="faq-scan"></div>
+      <div class="ambient-blob ambient-blob--1"></div>
+      <div class="ambient-blob ambient-blob--2"></div>
+    </div>
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-kicker">Preguntas frecuentes</span>
+        <h2 class="section-title">Las dudas que tienen<br />los directivos antes de decidir</h2>
+      </div>
+
+      <div class="faq-layout">
+        <div class="faq-aura" aria-hidden="true"></div>
+
+        <div class="faq-questions" role="tablist" aria-orientation="vertical">
+          <span class="faq-highlight" aria-hidden="true"></span>
+
+          <button class="faq-q is-active" type="button" data-faq="0" role="tab" aria-selected="true" id="faq-q-0" aria-controls="faq-panel-0" tabindex="0">
+            <span class="q-num">01</span>
+            <span class="q-text">¿Quién puede contratar Tap In?</span>
+            <span class="q-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </span>
+          </button>
+
+          <button class="faq-q" type="button" data-faq="1" role="tab" aria-selected="false" id="faq-q-1" aria-controls="faq-panel-1" tabindex="-1">
+            <span class="q-num">02</span>
+            <span class="q-text">¿Cuánto le toma al colegio implementar esto?</span>
+            <span class="q-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </span>
+          </button>
+
+          <button class="faq-q" type="button" data-faq="2" role="tab" aria-selected="false" id="faq-q-2" aria-controls="faq-panel-2" tabindex="-1">
+            <span class="q-num">03</span>
+            <span class="q-text">¿Funciona con los proveedores y sistemas que ya tenemos?</span>
+            <span class="q-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </span>
+          </button>
+
+          <button class="faq-q" type="button" data-faq="3" role="tab" aria-selected="false" id="faq-q-3" aria-controls="faq-panel-3" tabindex="-1">
+            <span class="q-num">04</span>
+            <span class="q-text">¿Cómo maneja Tap In los datos del colegio?</span>
+            <span class="q-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </span>
+          </button>
+
+          <button class="faq-q" type="button" data-faq="4" role="tab" aria-selected="false" id="faq-q-4" aria-controls="faq-panel-4" tabindex="-1">
+            <span class="q-num">05</span>
+            <span class="q-text">¿Se puede contratar solo un módulo?</span>
+            <span class="q-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="faq-panels">
+          <div class="faq-panel is-active" data-faq="0" role="tabpanel" id="faq-panel-0" aria-labelledby="faq-q-0" tabindex="0">
+            <span class="panel-tag">Acceso</span>
+            <p>Cualquier área del colegio puede integrarlo de forma independiente: la administración central, el encargado del comedor, la directiva del Centro de Padres o un profesor externo que dicta talleres. Cada módulo se activa según quién lo necesite, sin que el colegio tenga que adoptar el sistema completo desde el inicio.</p>
+          </div>
+          <div class="faq-panel" data-faq="1" role="tabpanel" id="faq-panel-1" aria-labelledby="faq-q-1" tabindex="0">
+            <span class="panel-tag">Implementación</span>
+            <p>En solo unos días ya están operando. Nuestro equipo gestiona toda la integración con concesionarios, proveedores y administrativos según corresponda, sin trabajo técnico de su parte, y acompaña cada paso del proceso.</p>
+          </div>
+          <div class="faq-panel" data-faq="2" role="tabpanel" id="faq-panel-2" aria-labelledby="faq-q-2" tabindex="0">
+            <span class="panel-tag">Integración</span>
+            <p>Sí. Tap In se integra con el concesionario actual del comedor, con los proveedores de transporte y talleres que ya opera el colegio, y no reemplaza ningún sistema existente. Se suma a lo que ya funciona y mejora la conexión de la comunidad escolar.</p>
+          </div>
+          <div class="faq-panel" data-faq="3" role="tabpanel" id="faq-panel-3" aria-labelledby="faq-q-3" tabindex="0">
+            <span class="panel-tag">Privacidad</span>
+            <p>Operamos con los datos mínimos necesarios para una operación eficiente: el RUT del alumno y la cuenta del apoderado. Para las validaciones ofrecemos alternativas biométricas con todos los resguardos de datos vigentes, además de versiones sin biometría para los colegios que así lo prefieran. Usamos dispositivos certificados, cumplimos la normativa de protección de datos en Chile y los datos del colegio no se comparten.</p>
+          </div>
+          <div class="faq-panel" data-faq="4" role="tabpanel" id="faq-panel-4" aria-labelledby="faq-q-4" tabindex="0">
+            <span class="panel-tag">Modularidad</span>
+            <p>Sí, cada módulo funciona de forma independiente. Los colegios pueden comenzar por las soluciones de comedor o Centro de Padres y se expanden al resto cuando ven los resultados. Sin obligación de adoptar el ecosistema completo desde el día uno.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div><!-- /.bg-light-stack -->
+
+  <!-- ═══════════════════════════════════════════
+       DARK REGION (bottom) — single continuous dark
+       surface wrapping contacto + footer so there's no
+       seam between them either.
+  ════════════════════════════════════════════ -->
+  <div class="bg-dark-stack">
+
+  <!-- ═══════════════════════════════════════════
+       FORMULARIO / CTA CIERRE
+  ════════════════════════════════════════════ -->
+  <section class="section-contacto" id="contacto" data-nav-theme="dark">
+    <div class="contacto-bg">
+      <div class="contacto-orb contacto-orb--1"></div>
+      <div class="contacto-orb contacto-orb--2"></div>
+      <div class="contacto-grid"></div>
+    </div>
+    <div class="container">
+      <div class="contacto-inner">
+        <div class="contacto-left">
+          <span class="section-kicker kicker-light">
+            <span class="kicker-dot"></span> Demo gratuita
+          </span>
+          <h2 class="contacto-title">¿Quieres ver Tap In<br />en tu colegio?</h2>
+          <p class="contacto-subhead">
+            30 minutos. Sin compromiso. Te mostramos el sistema en vivo,
+            adaptado a tu institución.
+          </p>
+
+          <ol class="contacto-steps">
+            <li class="contacto-step">
+              <span class="step-num">01</span>
+              <div class="step-body">
+                <strong>Cuéntanos sobre tu colegio</strong>
+                <span>Te respondemos en menos de 24 horas hábiles.</span>
+              </div>
+            </li>
+            <li class="contacto-step">
+              <span class="step-num">02</span>
+              <div class="step-body">
+                <strong>Demo personalizada de 30 min</strong>
+                <span>Vía Google Meet, sin presentaciones genéricas.</span>
+              </div>
+            </li>
+            <li class="contacto-step">
+              <span class="step-num">03</span>
+              <div class="step-body">
+                <strong>Decides a tu ritmo</strong>
+                <span>Sin contratos forzados ni costos ocultos.</span>
+              </div>
+            </li>
+          </ol>
+
+          <div class="contacto-trust">
+            <div class="trust-item">
+              <span class="trust-check" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>
+              </span>
+              Sin compromisos
+            </div>
+            <div class="trust-item">
+              <span class="trust-check" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>
+              </span>
+              Respuesta en menos de 24 horas
+            </div>
+            <div class="trust-item">
+              <span class="trust-check" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>
+              </span>
+              Tu información es confidencial
+            </div>
+          </div>
+        </div>
+
+        <div class="contacto-right">
+          <div class="form-card">
+            <div class="form-card-glow" aria-hidden="true"></div>
+            <div class="form-card-corner form-card-corner--tl" aria-hidden="true"></div>
+            <div class="form-card-corner form-card-corner--br" aria-hidden="true"></div>
+
+            <div class="form-card-header">
+              <span class="form-badge">
+                <span class="form-badge-pulse" aria-hidden="true"></span>
+                Cupos disponibles esta semana
+              </span>
+              <h3 class="form-card-title">Reserva tu demo</h3>
+              <p class="form-card-sub">Toma 1 minuto. Te respondemos hoy.</p>
+            </div>
+
+            <form class="demo-form"
+                  id="demoForm"
+                  action="https://formspree.io/f/xkoqdapw"
+                  method="POST"
+                  novalidate>
+              <!-- Formspree meta fields -->
+              <input type="hidden" name="_subject" value="Nueva solicitud de demo · Tap In Landing">
+              <!-- Honeypot anti-spam de Formspree (debe quedar vacío; los bots lo llenan) -->
+              <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+              <div class="form-group">
+                <label for="nombre">Nombre completo</label>
+                <div class="input-wrap">
+                  <span class="input-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+                  </span>
+                  <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" autocomplete="name" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Correo institucional</label>
+                <div class="input-wrap">
+                  <span class="input-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/></svg>
+                  </span>
+                  <input type="email" id="email" name="email" placeholder="director@colegio.cl" autocomplete="email" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="colegio">Nombre del colegio</label>
+                <div class="input-wrap">
+                  <span class="input-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M9 21v-6h6v6"/><path d="M10 11h0M14 11h0"/></svg>
+                  </span>
+                  <input type="text" id="colegio" name="colegio" placeholder="Colegio XYZ" autocomplete="organization" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="cargoTrigger">Cargo</label>
+                <div class="custom-select" id="cargoSelect" data-placeholder="Selecciona tu cargo">
+                  <button type="button"
+                          class="custom-select-trigger"
+                          id="cargoTrigger"
+                          aria-haspopup="listbox"
+                          aria-expanded="false">
+                    <span class="input-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>
+                    </span>
+                    <span class="custom-select-value">Selecciona tu cargo</span>
+                    <span class="input-chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </span>
+                  </button>
+                  <ul class="custom-select-options" role="listbox" aria-labelledby="cargoTrigger" tabindex="-1">
+                    <li class="custom-select-option" role="option" data-value="Director/a" tabindex="-1">
+                      <span class="option-text">Director/a</span>
+                      <span class="option-check" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>
+                      </span>
+                    </li>
+                    <li class="custom-select-option" role="option" data-value="Encargado/a administrativo/a" tabindex="-1">
+                      <span class="option-text">Encargado/a administrativo/a</span>
+                      <span class="option-check" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>
+                      </span>
+                    </li>
+                    <li class="custom-select-option" role="option" data-value="Presidente/a del Centro de Padres" tabindex="-1">
+                      <span class="option-text">Presidente/a del Centro de Padres</span>
+                      <span class="option-check" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>
+                      </span>
+                    </li>
+                    <li class="custom-select-option" role="option" data-value="Otro" tabindex="-1">
+                      <span class="option-text">Otro</span>
+                      <span class="option-check" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>
+                      </span>
+                    </li>
+                  </ul>
+                  <input type="hidden" id="cargo" name="cargo" required value="">
+                </div>
+              </div>
+
+              <button type="submit" class="btn-submit">
+                <span class="btn-submit-shine" aria-hidden="true"></span>
+                <span class="btn-submit-label">Quiero ver la demo</span>
+                <span class="btn-submit-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                </span>
+                <span class="btn-submit-spinner" aria-hidden="true"></span>
+              </button>
+
+              <p class="form-error" id="formError" role="alert" aria-live="polite">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                <span class="form-error-text">Hubo un problema enviando el formulario. Inténtalo de nuevo.</span>
+              </p>
+
+              <p class="form-micro">
+                <svg class="form-micro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                Tu información viaja cifrada. No la compartimos.
+              </p>
+            </form>
+
+            <div class="form-success" id="formSuccess" aria-live="polite">
+              <div class="success-icon" aria-hidden="true">
+                <svg class="success-svg" viewBox="0 0 64 64">
+                  <circle class="success-circle" cx="32" cy="32" r="28"/>
+                  <path class="success-check" d="M19 33 l9 9 l17 -18"/>
+                </svg>
+              </div>
+              <h3>¡Listo! Te contactamos pronto</h3>
+              <p>Recibirás un correo de confirmación en los próximos minutos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer class="footer" data-nav-theme="dark">
+    <div class="footer-bg" aria-hidden="true">
+      <div class="footer-dots"></div>
+      <div class="footer-divider"></div>
+      <div class="footer-beam"></div>
+      <div class="footer-horizon"></div>
+    </div>
+
+    <div class="container footer-inner">
+      <div class="footer-col footer-col--brand">
+        <span class="footer-brand" aria-label="Tap In">
+          <img src="img/wordmark_tapin.svg" alt="tap in" class="footer-wordmark" />
+        </span>
+        <p class="footer-tagline">
+          La plataforma que conecta directores, apoderados, alumnos y equipo en un solo ecosistema.
+        </p>
+        <div class="footer-locale">
+          <span class="locale-dot" aria-hidden="true"></span>
+          Hecho en Chile · Operando en LATAM
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-heading"><span class="heading-accent" aria-hidden="true"></span>Soluciones</h3>
+        <a class="footer-link" href="comedor-escolar.html">Casino · Comedor</a>
+        <a class="footer-link" href="centro-de-padres.html">Centro de Padres</a>
+        <a class="footer-link" href="ligas-y-talleres.html">Talleres y Ligas</a>
+        <a class="footer-link" href="gestion-de-proveedores.html">Gestión de Proveedores</a>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-heading"><span class="heading-accent" aria-hidden="true"></span>Empresa</h3>
+        <a class="footer-link" href="empresa.html">Sobre Tap In</a>
+        <a class="footer-link" href="empresa.html#equipo">Equipo</a>
+        <a class="footer-link" href="#colegios">Casos</a>
+        <a class="footer-link" href="#objeciones">Preguntas frecuentes</a>
+        <a class="footer-link" href="#contacto">Solicitar demo</a>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-heading"><span class="heading-accent" aria-hidden="true"></span>Contacto</h3>
+        <a class="footer-link footer-link--icon footer-link--mail" href="mailto:contacto@tapin.cl">
+          <span class="contact-icon" aria-hidden="true">
+            <svg class="mail-envelope" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="M3 7l9 7 9-7"/>
+            </svg>
+            <svg class="mail-plane" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2.5L11.5 12.5"/>
+              <path d="M21.5 2.5L15 21L11.5 12.5L3 8.5L21.5 2.5Z"/>
+            </svg>
+            <svg class="mail-trail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 18 Q 7 14, 12 12"/>
+            </svg>
+          </span>
+          <span>contacto@tapin.cl</span>
+        </a>
+        <a class="footer-link footer-link--icon footer-link--call" href="#contacto">
+          <span class="contact-icon" aria-hidden="true">
+            <span class="call-pulse" aria-hidden="true"></span>
+            <svg class="call-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 0 1 2-2h2.5a1 1 0 0 1 .96.71l1.4 4.21a1 1 0 0 1-.5 1.21l-2.36 1.18a13 13 0 0 0 6.69 6.69l1.18-2.36a1 1 0 0 1 1.21-.5l4.21 1.4a1 1 0 0 1 .71.96V19a2 2 0 0 1-2 2A16 16 0 0 1 3 5z"/></svg>
+          </span>
+          Agenda una llamada
+        </a>
+        <div class="footer-socials">
+          <a class="social-btn" href="https://www.linkedin.com/company/tap-in-cl/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.34 18.34H5.67V9.67h2.67v8.67zM7 8.5a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1zm11.34 9.84h-2.67v-4.21c0-1-.02-2.3-1.4-2.3-1.41 0-1.62 1.1-1.62 2.23v4.28H10v-8.67h2.56v1.18h.04c.36-.68 1.23-1.4 2.53-1.4 2.71 0 3.21 1.78 3.21 4.1v4.79z"/></svg>
+          </a>
+          <a class="social-btn" href="https://www.instagram.com/app.tapin/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          </a>
+          <a class="social-btn" href="https://wa.me/56991365484" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A10.5 10.5 0 0 0 3.6 16.4L2 22l5.7-1.5a10.5 10.5 0 0 0 12.8-17zM12 19.7c-1.6 0-3.2-.4-4.6-1.3l-.3-.2-3.4.9.9-3.3-.2-.4A8.7 8.7 0 1 1 12 19.7zm5-6.5c-.3-.1-1.6-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.6.1s-1.2-.4-2.2-1.4c-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.7-1.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.1 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.6-.6 1.9-1.3.2-.6.2-1.1.2-1.3-.1-.2-.3-.3-.6-.4z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <span class="footer-copy">© 2026 Tap In SpA. Todos los derechos reservados.</span>
+        <div class="footer-legal">
+          <a href="terminos.html">Términos</a>
+          <span aria-hidden="true">·</span>
+          <a href="privacidad.html">Privacidad</a>
+          <span aria-hidden="true">·</span>
+          <a href="cookies.html">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  </div><!-- /.bg-dark-stack (bottom) -->
+
+  <!-- iPad (≤1279px): cargar los mockups de Módulos SIN su marco interno.
+       Le añadimos ?frameless al src de cada iframe; el mockup la honra quitando
+       fondo + sombra de su tarjeta. El PC (≥1280px) no entra a este if, así que
+       su iframe queda intacto. Aislado y con try/catch para no romper nada. -->
+  <script>
+  (function(){
+    try{
+      if (window.innerWidth <= 1279) {
+        var frames = document.querySelectorAll('.cmodulo-iframe');
+        for (var i = 0; i < frames.length; i++) {
+          var s = frames[i].getAttribute('src');
+          if (s && s.indexOf('frameless') === -1) {
+            frames[i].setAttribute('src', s + (s.indexOf('?') > -1 ? '&' : '?') + 'frameless=1&mv=2');
+          }
+        }
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <script src="js/main.js?v=20260604e"></script>
+  <!-- BUILD SOLO HOME: desactiva links a subpáginas no publicadas (ver el archivo) -->
+  <script src="js/solo-home.js?v=1"></script>
+</body>
+</html>
